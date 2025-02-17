@@ -1,0 +1,310 @@
+.color-principal {
+  background-color: #276e90 !important;
+}
+
+.color-principal-text {
+  color: #276e90;
+}
+
+.color-complementario {
+  background-color: #cecfc9 !important;
+}
+
+.color-complementario-text {
+  color: #cecfc9 !important;
+}
+
+.color-oscuro {
+  background-color: #0a3243 !important;
+}
+
+.color-oscuro-text {
+  color: #0a3243 !important;
+}
+
+.color-claro {
+  background-color: #efefef !important;
+}
+
+.color-claro-text {
+  color: #efefef !important;
+}
+
+.datepicker-date-display {
+  color: #fff;
+  background-color: #276e90;
+}
+
+.datepicker-table td.is-today {
+  color: #276e90;
+}
+
+.datepicker-table td.is-selected {
+  color: #fff;
+  background-color: #276e90;
+}
+
+.datepicker-day-button:focus {
+  background-color: #276e90;
+}
+
+.datepicker-cancel,
+.datepicker-clear,
+.datepicker-today,
+.datepicker-done {
+  color: #276e90;
+}
+
+.btn,
+.btn-large,
+.btn-small {
+  background-color: #276e90;
+}
+
+.btn:hover,
+.btn-large:hover,
+.btn-small:hover {
+  background-color: #0a3243;
+}
+
+.collection .collection-item.active {
+  background-color: #276e90;
+}
+
+input:not([type]):focus:not([readonly]),
+input[type="text"]:not(.browser-default):focus:not([readonly]),
+input[type="password"]:not(.browser-default):focus:not([readonly]),
+input[type="email"]:not(.browser-default):focus:not([readonly]),
+input[type="url"]:not(.browser-default):focus:not([readonly]),
+input[type="time"]:not(.browser-default):focus:not([readonly]),
+input[type="date"]:not(.browser-default):focus:not([readonly]),
+input[type="datetime"]:not(.browser-default):focus:not([readonly]),
+input[type="datetime-local"]:not(.browser-default):focus:not([readonly]),
+input[type="tel"]:not(.browser-default):focus:not([readonly]),
+input[type="number"]:not(.browser-default):focus:not([readonly]),
+input[type="search"]:not(.browser-default):focus:not([readonly]),
+textarea.materialize-textarea:focus:not([readonly]) {
+  border-bottom: 1px solid #276e90;
+  box-shadow: 0 1px 0 0 #276e90;
+}
+
+input:not([type]):focus:not([readonly]) + label,
+input[type="text"]:not(.browser-default):focus:not([readonly]) + label,
+input[type="password"]:not(.browser-default):focus:not([readonly]) + label,
+input[type="email"]:not(.browser-default):focus:not([readonly]) + label,
+input[type="url"]:not(.browser-default):focus:not([readonly]) + label,
+input[type="time"]:not(.browser-default):focus:not([readonly]) + label,
+input[type="date"]:not(.browser-default):focus:not([readonly]) + label,
+input[type="datetime"]:not(.browser-default):focus:not([readonly]) + label,
+input[type="datetime-local"]:not(.browser-default):focus:not([readonly]) + label,
+input[type="tel"]:not(.browser-default):focus:not([readonly]) + label,
+input[type="number"]:not(.browser-default):focus:not([readonly]) + label,
+input[type="search"]:not(.browser-default):focus:not([readonly]) + label,
+textarea.materialize-textarea:focus:not([readonly]) + label {
+  color: #276e90;
+}
+
+.input-field .prefix.active {
+  color: #276e90;
+}
+
+.dropdown-content li > a,
+.dropdown-content li > span {
+  color: #276e90;
+}
+
+.select-wrapper input.select-dropdown:focus {
+  border-bottom: 1px solid #276e90;
+}
+
+.timepicker-tick.active,
+.timepicker-tick:hover {
+  background-color: #0a3243;
+}
+
+.chatRecibido {
+  background-color: #efefef;
+  color: #2e2c2c;
+  border-radius: 10px 10px 10px 10px;
+  -webkit-border-radius: 10px 10px 10px 10px;
+  -moz-border-radius: 10px 10px 10px 10px;
+}
+
+.chatEnviado {
+  background-color: #276e90;
+  color: #fff;
+  border-radius: 10px 10px 10px 10px;
+  -webkit-border-radius: 10px 10px 10px 10px;
+  -moz-border-radius: 10px 10px 10px 10px;
+}
+
+.chatRecibidoAdmin {
+  background-color: #ff9800;
+  color: #fff;
+  border-radius: 10px 10px 10px 10px;
+  -webkit-border-radius: 10px 10px 10px 10px;
+  -moz-border-radius: 10px 10px 10px 10px;
+}
+
+.chat-application .app-chat .chat-content .chat-content-area .chat-area .chats .chat.chatRecibidoAdminAgente .chat-body .chat-text p {
+  color: #fff;
+  background-color: #ff9800;
+}
+
+.chat-application .app-chat .chat-content .chat-content-area .chat-area .chats .chat.chatRecibidoAdminAgente .chat-body .chat-text:first-child:before {
+  border-bottom-color: #ff9800;
+  border-left-color: #ff9800;
+}
+
+.btn-floating {
+  background-color: #0a3243;
+}
+
+.btn-floating:hover {
+  background-color: #0a3243;
+}
+
+#loaderGeneral {
+  position: fixed;
+  z-index: 10;
+  height: 100%;
+  overflow-x: hidden;
+  width: 100%;
+  background: white;
+  opacity: 70%;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.preloader-wrapper.big {
+  width: 250px;
+  height: 250px;
+}
+
+/** Estilo mensaje img */
+.imgChatSend {
+  width: 100%;
+  border-radius: 6px;
+  background: #0a3143;
+}
+
+.imgChatReceive {
+  width: 100%;
+  border-radius: 6px;
+  background: #fff;
+}
+
+#dropdownTip {
+  min-width: 250px;
+}
+
+.tiempoAmarillo {
+  background-color: #ffa726;
+  border-radius: 7px;
+  color: #fff;
+}
+
+.tiempoRojo {
+  background-color: #ff5252;
+  border-radius: 7px;
+  color: #fff;
+}
+
+.tiempoVerde {
+  background-color: #66bb6a;
+  border-radius: 7px;
+  color: #fff;
+}
+
+.tiempoAzul {
+  background-color: #00bcd4;
+  border-radius: 7px;
+  color: #fff;
+}
+
+.cod-cliente-web {
+  color: #5ea2de;
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+
+/* * containerQR */
+.containerQR {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.containerQR .boxPadre {
+  position: relative;
+  width: 350px;
+  height: 350px;
+}
+.containerQR .boxPadre .box {
+  position: absolute;
+  display: flex;
+  width: 350px;
+  height: 350px;
+  background: rgba(225, 225, 225, 0.1);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(225, 225, 225, 0.5);
+  border-right: 1px solid rgba(225, 225, 225, 0.2);
+  border-bottom: 1px solid rgba(225, 225, 225, 0.2);
+  border-radius: 10px;
+  z-index: 3;
+  padding: 25px;
+}
+.containerQR .circle1 {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: linear-gradient(#2196f3, #31ff38);
+  border-radius: 50%;
+  transform: translate(295px, 295px);
+  z-index: 1;
+}
+.containerQR .circle2 {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  background: linear-gradient(#ffc107, #e91e63);
+  border-radius: 50%;
+  transform: translate(-95px, -95px);
+  z-index: 1;
+}
+.containerQR #imgQRConectado {
+  width: 100%;
+}
+.displayNone {
+  display: none;
+}
+
+/* login Efecto*/
+#particles-js {
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  z-index: -1;
+}
+
+/* ESTILOS PARA SELECT2 DENTRO DE MODALS */
+.select2-container--open .select2-dropdown {
+  z-index: 10004 !important; /* ajusta el valor según sea necesario */
+}
+
+#tablaOUT {
+  display: none;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  z-index: 1000;
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1); 
+}

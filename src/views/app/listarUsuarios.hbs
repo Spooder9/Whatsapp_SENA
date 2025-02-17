@@ -1,0 +1,68 @@
+<div id="main">
+    <div class="row">
+        <div class="col s12">
+            <div class="container">
+                <div class="section section-data-tables">
+
+                    <!-- Datatable Lista usuarios -->
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="card">
+                                <div class="card-content">
+                                    <h4 class="card-title" data-i18n="Lista de usuarios">Lista de usuarios</h4>
+                                    <div class="row">
+                                        <div class="col s12">
+                                            {{!-- <table id="page-length-option" class="display"> --}}
+                                            <table id="tablaListaUsers" class="display">
+                                                <thead>
+                                                    <tr>
+                                                        <th data-i18n="IDUser">ID Usuario</th>
+                                                        <th data-i18n="Nombre">Nombre</th>
+                                                        <th data-i18n="Usuario">Usuario</th>
+                                                        <th data-i18n="Documento">Documento</th>
+                                                        <th data-i18n="Rol">Rol</th>
+                                                        <th data-i18n="Chats">Campaña</th>
+                                                        <th data-i18n="Estado">Estado</th>
+                                                        <th data-i18n="Accion">Acción</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {{#each listaUsuarios}}
+                                                    <tr>
+                                                        <td>{{this.PKUSU_NCODIGO}}</td>
+                                                        <td>{{this.USU_CNOMBRE}}</td>
+                                                        <td>{{this.USU_CUSUARIO}}</td>
+                                                        <td>{{this.USU_CDOCUMENTO}}</td>
+                                                        <td>{{this.USU_CROL}}</td>
+                                                        <td>{{this.USU_NCHATS}}</td>
+                                                        <td>{{this.USU_CESTADO}}</td>
+                                                        <td>
+                                                            <a class="btn waves-effect waves-light color-oscuro" id="editar"
+                                                                href="/usuarios/actualizarUsuario/{{this.EnCrypt}}"><i
+                                                                    class='bx bx-edit-alt'></i></a>
+                                                            <a class="btn waves-effect waves-light red accent-2" id="borrar"
+                                                                eliminarUsuario="{{this.EnCrypt}}"><i
+                                                                    class='bx bx-trash-alt'></i></a>
+                                                        </td>
+                                                    </tr>
+                                                    {{/each}}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- FIN Datatable Lista usuarios -->
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!-- <script src='https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js'></script> --}}
+<script src="/js/listarUsuarios.js"></script>

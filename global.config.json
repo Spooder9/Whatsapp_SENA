@@ -1,0 +1,51 @@
+{
+  "MAIN_PATH": "D:/SENA/ANALISIS Y DESARROLLO DE SOFTWARE. (2879688)/Proyecto",
+  "database": {
+    "HOST": "localhost",
+    "USER": "root",
+    "DB_NAME": "dbp_what_sena",
+    "PASSWORD": "Spooder.01"
+  },
+  "ad": {
+    "URL": "my_LDAP",
+    "BASE_DN": "my_BASE_DN",
+    "DOMAIN": "my_dominio",
+    "USERNAME": "",
+    "PASSWORD": ""
+  },
+  "apis": {
+    "web": {
+      "HOST": "localhost",
+      "URL": "localhost",
+      "PORT": "5052",
+      "PATH": "D:/SENA/ANALISIS Y DESARROLLO DE SOFTWARE. (2879688)/Proyecto/src"
+    },
+    "botWhatsappWebJS": {
+      "HOST": "localhost",
+      "URL": "localhost",
+      "PORT": "5050",
+      "PATH": "D:/SENA/ANALISIS Y DESARROLLO DE SOFTWARE. (2879688)/Proyecto",
+      "PATH_AUTH": "D:/SENA/ANALISIS Y DESARROLLO DE SOFTWARE. (2879688)/Proyecto/whatsapp_bot/.wwebjs_auth",
+      "PATH_CACHE": "D:/SENA/ANALISIS Y DESARROLLO DE SOFTWARE. (2879688)/Proyecto/whatsapp_bot/.wwebjs_cache"
+    },
+    "asignacion": {
+      "HOST": "my_host",
+      "URL": "my_url_api_asginacion",
+      "PORT": "my_port_asignacion",
+      "PATH": "my_ruta_api_asginacion"
+    },
+
+    "consultaMensaje": {
+      "HOST": "my_host",
+      "URL": "my_url_api_consultarmensajes",
+      "PORT": "my_port_consultarmensajes",
+      "PATH": "my_ruta_api_consultarmensajes"
+    },
+    "enviaMensaje": {
+      "HOST": "localhost",
+      "URL": "localhost",
+      "PORT": "5051",
+      "PATH": "D:/SENA/ANALISIS Y DESARROLLO DE SOFTWARE. (2879688)/Proyecto/apis/enviar-mensajes"
+    }
+  }
+}

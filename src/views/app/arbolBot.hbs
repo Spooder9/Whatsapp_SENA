@@ -1,0 +1,83 @@
+<div id="main">
+    <div class="row">
+        <div class="col s12">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col s12">
+                        <div id="input-fields" class="card card-tabs">
+                            <div class="card-content">
+                                <div class="card-title">
+                                    <div class="row">
+                                        <div class="col s12 m6 l10">
+                                            <h4 class="card-title" data-i18n="Árbol BOT">Árbol BOT</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="view-input-fields">
+                                    <div class="row">
+                                        <div class="col s12">
+                                            <!-- Datatable Lista Arbol-->
+                                                <div class="row">
+                                                    <div class="col s12">
+                                                        <div class="card">
+                                                            <div class="card-content">
+                                                                {{!-- <h4 class="card-title" data-i18n="Árbol BOT">Árbol BOT</h4> --}}
+                                                                <div class="row">
+                                                                    <div class="col s12">
+                                                                        <table id="page-length-option" class="display">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th data-i18n="Nombre Menú">Nombre Menú</th>
+                                                                                    <th data-i18n="Opción">Opción</th>
+                                                                                    <th data-i18n="Texto">Texto</th>
+                                                                                    
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                {{#each arbol}}
+                                                                                <tr>
+                                                                                    <td>{{this.BTREE_TIPO_MSG}}</td>
+                                                                                    <td>{{this.BTREE_OPTION_NUM}}</td>
+                                                                                    <td>{{this.BTREE_TEXTO}}</td>
+                                                                                    
+                                                                                    <td>
+                                                                                        <a class="btn waves-effect waves-light color-oscuro" id="editar"
+                                                                                            href="/textoBot/actualizarTextoGuionBOT/{{this.EnCrypt}}"><i
+                                                                                                class='bx bx-edit-alt'></i></a>
+                                                                                        
+                                                                                    </td>
+                                                                                </tr>
+                                                                                {{/each}}
+                                                                            </tbody>
+                                                                            <tfoot>
+                                                                                <tr>
+                                                                                    <th data-i18n="Nombre Menú">Nombre Menú</th>
+                                                                                    <th data-i18n="Opción">Opción</th>
+                                                                                    <th data-i18n="Texto">Texto</th>
+                                                                                </tr>
+                                                                            </tfoot>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <!-- FIN Datatable Lista Arbol -->
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!-- <script src="/js/actualizarUsuario.js"></script> --}}

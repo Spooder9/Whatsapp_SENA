@@ -1,0 +1,143 @@
+<div id='main'>
+  <div class='row'>
+    <div class='col s12'>
+      <div class='container'>
+
+        <div class='row'>
+          <div class='col s12'>
+            <div id='input-fields' class='card card-tabs'>
+              <div class='card-content'>
+                <div class='card-title'>
+                  <div class='row'>
+                    <div class='col s12 m6 l10'>
+                      <h4 class='card-title' data-i18n='Modificar usuario'>Modificar usuario</h4>
+                    </div>
+                  </div>
+                </div>
+                <div id='view-input-fields'>
+                  <div class='row'>
+                    <div class='col s12'>
+                      <form class='row' action='/usuarios/actualizarUsuario/{{usuario.EnCrypt}}' method='post'>
+
+                        <div class='row'>
+                          {{! Nombre }}
+                          <div class='input-field col s12 m6 l4'>
+                            <input type='text' name='usuario_red' id='usuario_red' value='{{usuario.USU_CUSUARIO_AD}}' required />
+                            <label for='usuario_red' data-i18n='Usuario de red'>Usuario de red<span class='red-text'>*</span></label>
+                          </div>
+
+                          {{! Documento }}
+                          <div class='input-field col s12 m6 l4'>
+                            <input type='text' name='usuario_documento' id='usuario_documento' value='{{usuario.USU_CDOCUMENTO}}' required />
+                            <label for='usuario_documento' data-i18n='Documento'>Documento<span class='red-text'>*</span></label>
+                          </div>
+
+                          {{! RRHH ID }}
+                          {{!-- <div class='input-field col s12 m6 l4'>
+                            <input type='text' name='id_rrhh' id='id_rrhh' value='{{usuario.USU_RRHH_ID}}' required />
+                            <label for='id_rrhh' data-i18n='ID RRHH'>ID RRHH<span class='red-text'>*</span></label>
+                          </div> --}}
+
+                          {{! Rol }}
+                          <div class='input-field col s12 m6 l4'>
+                            <select class='select' name='usuario_rol' id='usuario_rol' required>
+                              <option value='' disabled selected>Select option
+                              </option>
+                              <option value='ADMINISTRADOR'>ADMINISTRADOR</option>
+                              <option value='AGENTE'>AGENTE</option>
+                            </select>
+                            <label for='usuario_rol' data-i18n='Rol'>Rol<span class='red-text'>*</span></label>
+                          </div>
+
+                          <div id='rolUsuario' hidden>{{usuario.USU_CROL}}</div>
+
+                          {{! Nombre usuario}}
+                          <div class='input-field col s12 m6 l4'>
+                            <input type='text' name='usuario_nombreUsuario' id='usuario_nombreUsuario' value='{{usuario.USU_CNOMBRE}}' required />
+                            <label for='usuario_nombreUsuario' data-i18n='Nombre de usuario'>Nombre de usuario<span class='red-text'>*</span></label>
+                          </div>
+
+                          {{! Estado }}
+                          <div class='input-field col s12 m6 l4'>
+                            <select class='select' name='usuario_estado' id='usuario_estado' required>
+                              <option value='' disabled selected>Seleccione opción
+                              </option>
+                              <option value='ACTIVO'>ACTIVO</option>
+                              <option value='NO ACTIVO'>INACTIVO</option>
+                            </select>
+                            <label for='usuario_estado' data-i18n='Estado'>Estado<span class='red-text'>*</span></label>
+                          </div>
+
+                          <div id='estadoUsuario' hidden>{{usuario.USU_CESTADO}}</div>
+
+                          {{! Password }}
+                          {{!-- <div class='input-field col s12 m6 l4'>
+                            <input type='password' name='usuario_password' id='usuario_password' value='{{usuario.USU_CPASSWORD}}' required />
+                            <label for='usuario_password'>Password<span class='red-text'>*</span></label>
+                          </div> --}}
+
+                          {{! Campaña }}
+                          {{!-- <div class='input-field col s12 m6 l4'>
+                            <select class='select' name='usuario_campana' id='usuario_campana' required>
+                              <option value='' disabled selected>Select option
+                              </option>
+                              <option value='LAIKA'>LAIKA</option>
+                            </select>
+                            <label for='usuario_campana' data-i18n='Campana'>Campaña<span class='red-text'>*</span></label>
+                          </div>
+                          <div id='campanaUsuario' hidden>{{usuario.USU_CCAMPANA}}</div> --}}
+
+                        </div>
+
+                        <div class='row'>
+                          {{! EMAIL }}
+                          {{!-- <div class='input-field col s12 m6 l4'>
+                            <input type='email' name='usuario_emailUsuario' value='{{usuario.USU_CORREO}}' id='usuario_emailUsuario' required />
+                            <label for='usuario_emailUsuario'><span data-i18n='Email'>Email</span><span class='red-text'> *</span></label>
+                          </div> --}}
+
+                          {{! Cantidad de chats }}
+                          {{!-- <div class='input-field col s12 m6 l4'>
+                            <select class='select' name='usuario_chats' id='usuario_chats' required>
+                              <option value='0' selected>0</option>
+                              <option value='1'>1</option>
+                              <option value='2'>2</option>
+                              <option value='3'>3</option>
+                              <option value='4'>4</option>
+                              <option value='5'>5</option>
+                              <option value='6'>6</option>
+                              <option value='7'>7</option>
+                              <option value='8'>8</option>
+                              <option value='9'>9</option>
+                              <option value='10'>10</option>
+                            </select>
+                            <label for='usuario_chats'><span data-i18n='Cantidad de chats'>Cantidad de chats</span><span class='red-text'> *</span></label>
+                          </div>
+                          <div id='cantidadChats' hidden>{{usuario.USU_NCHATS}}</div>
+                        </div> --}}
+
+                        <div class='row'>
+                          <div class='nput-field col s12'>
+                            <button class='btn color-oscuro waves-effect waves-light right' type='submit' name='action'>
+                              <span data-i18n='Modificar usuario'>Modificar usuario</span>
+                              <i class='material-icons right'>send</i>
+                            </button>
+                          </div>
+                        </div>
+
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src='/js/actualizarUsuario.js'></script>

@@ -1,0 +1,69 @@
+<div id="main">
+    <div class="row">
+        <div class="col s12">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col s12">
+                        <div id="input-fields" class="card card-tabs">
+                            <div class="card-content">
+                                <div class="card-title">
+                                    <div class="row">
+                                        <div class="col s12 m6 l10">
+                                            <h4 class="card-title" data-i18n="Actualizar plantilla">Actulizar plantilla</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="view-input-fields">
+                                    <div class="row">
+                                        <div class="col s12">
+                                            <form class="row"
+                                                action="/plantillas/actualizarPlantilla/{{plantilla.EnCrypt}}"
+                                                method="post">
+
+                                                <div class="row">
+                                                    {{! Nombre }}
+                                                    <div class="input-field col s12 m8 l4">
+                                                        <input type="text" name="plantilla_nombre" id="plantilla_nombre"
+                                                            value="{{plantilla.PLA_CNOMBRE}}" required>
+                                                        <label for="plantilla_nombre" data-i18n="Nombre">Nombre<span
+                                                                class="red-text">*</span></label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    {{! Contenido }}
+                                                    <div class="input-field col s12 m12 l12">
+                                                        <textarea id="plantilla_contenido" name="plantilla_contenido"
+                                                            class="materialize-textarea"
+                                                            required>{{plantilla.PLA_CCONTENIDO}}</textarea>
+                                                        <label for="plantilla_contenido" data-i18n="Contenido">Contenido<span
+                                                                class="red-text">*</span></label>
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="nput-field col s12">
+                                                        <button class="btn color-oscuro waves-effect waves-light right"
+                                                            type="submit" name="action"><span  data-i18n="Modificar plantilla">Modificar plantilla</span>
+                                                            <i class="material-icons right">send</i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

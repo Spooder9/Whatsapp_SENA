@@ -1,0 +1,57 @@
+<div id="main">
+  <input id="inpRutaArchivo" type='hidden' value="{{this.rutaArchivo}}">
+  <input id="inpNombreExcel" type='hidden' value="{{this.nombreExcel}}">
+  <input id="inpCodeLanguage" type='hidden' value="">
+  <div class='row'>
+    <div class="col s12" style="margin-bottom: 2rem;">
+        <h4 style='text-align: center;'><i class='bx bxs-phone' ></i></i>Vista previa listado teléfonos</h4>
+        <p style='text-align: center;'> <span style="font-weight: bold;">Archivo:</span> <b> <span id="nombreExcel" class="#388e3c  green-text text-darken-2">{{this.nombreExcel}}</span></b> </p>
+    </div>
+
+    <div class="col s12 m6">
+      <div class='container' style="padding: 2rem;">
+        <div class="container cont-table">
+          <table id='page-length-option' class='striped centered' style="width:100%">
+          <thead>
+            <tr>
+              <th>Telefono</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each arrTelefonos}}
+              <tr>
+                <td>{{this}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col s12 m6">
+      <div class='container' style="padding: 2rem;">
+        <div class='row'>
+
+          <div class="input-field col s12">
+            <select id="selPlantilla">
+              <option value="" disabled selected>Seleccione la plantilla</option>
+            </select>
+            <label>Seleccione la plantilla</label>
+          </div>
+
+          <div class="col s12">
+            <div id='contPlantilla' class='cont-plantilla' style="margin: 0 auto; display: none"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col s12 center-align">
+      <button id="btnCargue" class="btn" type="button" style="margin: 2rem; font-weight: 600">Enviar masivo <i class='bx bxs-right-top-arrow-circle'></i></button>
+    </div>
+  </div>
+</div>
+
+<script src='/js/guardianCargadores2.0.js'></script>
+<script src='/js/masivo/vistaPrevia.js'></script>

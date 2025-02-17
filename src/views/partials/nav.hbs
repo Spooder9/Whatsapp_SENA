@@ -1,0 +1,60 @@
+<!-- BEGIN: SideNav-->
+<aside class='sidenav-main nav-expanded nav-lock nav-collapsible sidenav-dark color-oscuro sidenav-gradient sidenav-active-rounded'>
+  <div class='brand-sidebar' style="background-color: #f8f8f8">
+    <h1 class='logo-wrapper'><a class='brand-logo darken-1' href='/redirect'><img class='hide-on-med-and-down' src='/images/logo/dashboard.webp' alt='logo' /><img class='show-on-medium-and-down hide-on-med-and-up' src='/images/logo/dashboard.webp' alt='logo' /><span
+          class='logo-text hide-on-med-and-down' style="color: #525252">Admin</span></a><a class='navbar-toggler' href='#'><i class='material-icons' style="color: #525252">radio_button_checked</i></a></h1>
+  </div>
+
+  <ul class='sidenav sidenav-collapsible leftside-navigation collapsible sidenav-fixed menu-shadow' id='slide-out' data-menu='menu-navigation' data-collapsible='menu-accordion' style="background-color: #f8f8f8">
+
+    {{#if (isSupervisorOrAdministrator user.Rol)}}
+      <li class='bold'><a class='collapsible-header waves-effect waves-cyan' href='JavaScript:void(0)'><i class='material-icons' style="color: #525252">assignment</i><span class='menu-title' data-i18n='Reportes' style="color: #525252">Reportes</span></a>
+        <div class='collapsible-body'>
+          <ul class='collapsible collapsible-sub' data-collapsible='accordion'>
+            <li><a href='/reportes/reporteInteracciones'><i class='material-icons' style="color: #525252">radio_button_unchecked</i><span data-i18n='Tipificaciones' style="color: #525252">Tipificaciones</span></a></li>
+            {{!-- <li><a href='/reportes/reporteAgentes'><i class='material-icons'>radio_button_unchecked</i><span data-i18n='Agentes'>Agentes</span></a></li> --}}
+            {{!-- <li><a href='/reportes/reporte-gestiones'><i class='material-icons'>radio_button_unchecked</i><span data-i18n='Gestiones'>Gestiones</span></a></li> --}}
+          </ul>
+        </div>
+      </li>
+
+      <li class='bold'><a class='collapsible-header waves-effect waves-cyan' href='JavaScript:void(0)'><i class='material-icons' style="color: #525252">content_paste</i><span class='menu-title' data-i18n='Plantillas' style="color: #525252">Plantillas</span></a>
+        <div class='collapsible-body'>
+          <ul class='collapsible collapsible-sub' data-collapsible='accordion'>
+            <li><a href='/plantillas/crearPlantilla'><i class='material-icons' style="color: #525252">radio_button_unchecked</i><span data-i18n='Crear plantilla' style="color: #525252">Crear plantilla</span></a>
+            </li>
+            <li><a href='/plantillas/listarPlantillas'><i class='material-icons' style="color: #525252">radio_button_unchecked</i><span data-i18n='Modificar plantilla' style="color: #525252">Modificar plantilla</span></a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <li class='bold'><a class='collapsible-header waves-effect waves-cyan' href='JavaScript:void(0)'><i class='material-icons' style="color: #525252">group_add</i><span class='menu-title' data-i18n='Usuarios' style="color: #525252">Usuarios</span></a>
+        <div class='collapsible-body'>
+          <ul class='collapsible collapsible-sub' data-collapsible='accordion'>
+            <li><a href='/usuarios/crearUsuario'><i class='material-icons' style="color: #525252">radio_button_unchecked</i><span data-i18n='Crear usuarios' style="color: #525252">Crear usuario</span></a></li>
+            <li><a href='/usuarios/listarUsuarios'><i class='material-icons' style="color: #525252">radio_button_unchecked</i><span data-i18n='Modificar usuarios' style="color: #525252">Modificar usuario</span></a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <li><a class='waves-effect waves-cyan' href='/dashboard'><i class='material-icons' style="color: #525252">dashboard</i><span class='menu-title' style="color: #525252">Dashboard</span></a></li>
+      {{!-- <li><a class='waves-effect waves-cyan' href='/dashboard/bot'><i class='material-icons'>table_chart</i><span class='menu-title'>Dashboard BOT</span></a></li> --}}
+      {{!-- <li class='bold'><a href='/textoBot/arbolBot' class='waves-effect waves-cyan'><i class='material-icons' style="color: #525252">chat</i><span class='menu-title' data-i18n='Guion BOT' style="color: #525252">Guion BOT</span></a></li> --}}
+      {{! <li class='bold'><a href='/mensajeria/masivo/cargar-excel' class='waves-effect waves-cyan'><i class='material-icons'>file_upload</i><span class='menu-title' data-i18n='Cargar Excel'>Cargar excel</span></a></li> }}
+      <li><a href="/viewQR" style="color: #525252"><i class="material-icons" style="color: #525252">radio_button_unchecked</i>QR</a></li>
+
+    {{/if}}
+    
+
+    {{#if (isAgente user.Rol)}}
+      <li class='bold'><a href='/mensajeria' class='waves-effect waves-cyan'><i class='material-icons' style="color: #525252">chat</i><span class='menu-title' data-i18n='Cargar Excel' style="color: #525252">Mensajeria</span></a></li>
+    {{/if}}
+
+    {{! <li class='bold'><a class='waves-effect waves-cyan' href='https://crmlaika_rpa.groupcos.com' target='_blank'><span class='menu-title'>CRM Laika</span></a></li> }}
+
+  </ul>
+  <div class='navigation-background'></div><a class='sidenav-trigger btn-sidenav-toggle btn-floating btn-medium waves-effect waves-light hide-on-large-only' href='#' data-target='slide-out'><i class='material-icons' style="color: #525252">menu</i></a>
+</aside>
+<!-- END: SideNav-->

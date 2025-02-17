@@ -1,0 +1,60 @@
+<div id="main">
+    <div class="row">
+        <div class="col s12">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col s12">
+                        <div id="input-fields" class="card card-tabs">
+                            <div class="card-content">
+                                <div class="card-title">
+                                    <div class="row">
+                                        <div class="col s12 m6 l10">
+                                            <div style="display:flex"><span><h4 class="card-title" data-i18n="Actualizar texto guión BOT ">Actualizar texto guión BOT </h4></span> <span style="color:#0A3243"> <strong>: {{texto.BTREE_TIPO_MSG}}</strong></span></div>
+                                            <div style="display:flex"><span><h4 class="card-title" data-i18n="Opción">Opción</h4></span > <span style="color:#0A3243"> <strong>: {{texto.BTREE_OPTION_NUM}}</strong></span></div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="view-input-fields">
+                                    <div class="row">
+                                        <div class="col s12">
+                                            
+                                            <div style="display:none" id="idText">{{idTextEncrypt}}</div>
+                                            {{!-- <form action="/textoBot/actualizarTextoGuionBOT/{{idTextEncrypt}}" method="post"> --}}
+                                                <div class="row">
+                                                    <div class="input-field col s12 m12 l12">
+                                                        {{!-- <textarea name="texto_bot" id="texto_bot" onpaste="contarcaracteres();" onkeyup="contarcaracteres();"></textarea> --}}
+                                                        <input type="text" name="texto_bot" id="texto_bot" required  size="10" value="{{texto.BTREE_TEXTO}}" onpaste="contarcaracteres();" onkeyup="contarcaracteres();">
+                                                    </div>
+                                                    <div id="res" data-i18n="0 caractere/s">0 caractere/s</div>
+                                                </div>
+                                                 
+                                                 <div class="row">
+                                                    <div class="nput-field col s12">
+                                                        <button class="btn color-oscuro waves-effect waves-light right"
+                                                             name="action" id="btnActualizar"> <span data-i18n="Actualizar">Actualizar</span>
+                                                            <i class="material-icons right">send</i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                            {{!-- </form> --}}
+
+                                           
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/js/textoBot.js"></script>

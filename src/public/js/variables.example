@@ -1,0 +1,6 @@
+// *constantes APIS
+
+const URL_API_ASIGNACION = 'my_url_api_asginacion';
+const URL_API_CONSULTAR = 'my_url_api_consultarmensajes';
+const URB_API_ENVIAR_MSG = 'my_url_api_enviarmensajes';
+

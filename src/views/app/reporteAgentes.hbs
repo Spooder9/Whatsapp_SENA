@@ -1,0 +1,90 @@
+<div id="main">
+  <div class="row">
+    <div class="col s12">
+      <div class="container">
+        <div class="section section-data-tables">
+
+          <div class="card">
+            <div class="card-content">
+              <div class="card-title">
+                <h4 class="card-title" data-i18n="Reporte agentes">Reporte agentes</h4>
+                <div class="row">
+                  <div class="col s12">
+                    <div class="input-field col s12 m3 l3">
+                      <input type="text" name="fechaInicial" id="fechaInicial" class="datepicker">
+                      <label for="fechaInicial" data-i18n="Fecha inicial">Fecha inicial</label>
+                    </div>
+                    <div class="input-field col s12 m3 l3">
+                      <input type="text" name="fechaFinal" id="fechaFinal" class="datepicker">
+                      <label for="fechaFinal" data-i18n="Fecha final">Fecha final</label>
+                    </div>
+
+                    <div class="input-field col s12 m3 l3">
+                      <select class="select2 browser-default" id="listaAgentes">
+                        <option value="0">ALL</option>
+                        {{#each datasqlListaAgentes}}
+                        <option value="{{this.PKUSU_NCODIGO}}">{{this.USU_CUSUARIO}}</option>
+                        {{/each}}
+                      </select>
+                    </div>
+
+                    <div class="input-field col s12 m3 l3">
+                      <a class="waves-effect waves-light btn color-oscuro" id="Buscar"><i
+                          class='bx bx-search-alt'></i></a>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Datatable Lista usuarios -->
+          <div class="row">
+            <div class="col s12">
+              <div class="card">
+                <div class="card-content">
+                  <div class="row">
+                    <div class="col s12">
+                      <table id="page-length-option" class="display">
+                        <thead>
+                          <tr>
+                            <th data-i18n="Agente">Agente</th>
+                            <th data-i18n="Documento">Documento</th>
+                            <th data-i18n="Estado">Estado</th>
+                            <th data-i18n="Fecha inicial">Fecha inicio</th>
+                            <th data-i18n="Fecha final">Fecha fin</th>
+                            <th data-i18n="Tiempo">Tiempo</th>
+                          </tr>
+                        </thead>
+                        <tbody id="bodyListaRegistroUsuarios">
+                        
+                        </tbody>
+                        <tfoot>
+                           <tr>
+                            <th data-i18n="Agente">Agente</th>
+                            <th data-i18n="Documento">Documento</th>
+                            <th data-i18n="Estado">Estado</th>
+                            <th data-i18n="Fecha inicial">Fecha inicio</th>
+                            <th data-i18n="Fecha final">Fecha fin</th>
+                            <th data-i18n="Tiempo">tiempo</th>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- FIN Datatable Lista usuarios -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/reporteAgentes.js"></script>
+

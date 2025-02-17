@@ -1,0 +1,161 @@
+<!-- BEGIN: Header-->
+<header class='page-topbar' id='header'>
+  <div class='navbar navbar-fixed'>
+    <nav class='navbar-main navbar-color nav-collapsible sideNav-lock navbar-dark no-shadow' style="background-color: #424242">
+
+      <div class='nav-wrapper center'>
+        <span class='hide-on-med-and-down'>
+          {{user.Nombre}}
+          -
+          {{user.Rol}}
+        </span>
+        <span id='userUsuario' hidden>{{user.Usuario}}</span>
+        <span id='authToken' hidden>{{user.authToken}}</span>
+        <p id='idioma' hidden>{{user.Idioma}}</p>
+
+        <!-- language-dropdown-->
+        <ul class='navbar-list right'>
+          <li class='dropdown-language'><a class='waves-effect waves-block waves-light translation-button' href='#' data-target='translation-dropdown'><span class='flag-icon flag-icon-co'></span></a></li>
+          <li class='hide-on-med-and-down'><a class='waves-effect waves-block waves-light toggle-fullscreen' href='javascript:void(0);'><i class='material-icons'>settings_overscan</i></a></li>
+          <li><a class='waves-effect waves-block waves-light profile-button' href='javascript:void(0);' data-target='profile-dropdown'><span class='avatar-status avatar-online'><img src='/img/undraw_male_avatar_323b.svg' alt='avatar' /><i></i></span></a></li>
+        </ul>
+        <!-- translation-button-->
+        <ul class='dropdown-content' id='translation-dropdown'>
+          <li class='dropdown-item'><a class='grey-text text-darken-1' href='#!' data-language='es'><i class='flag-icon flag-icon-co'></i> Español</a></li>
+          <li class='dropdown-item'><a class='grey-text text-darken-1' href='#!' data-language='pt'><i class='flag-icon flag-icon-br'></i> Portuguese</a></li>
+          <li class='dropdown-item'><a class='grey-text text-darken-1' href='#!' data-language='en'><i class='flag-icon flag-icon-gb'></i> English</a></li>
+        </ul>
+
+        <!-- profile-dropdown-->
+        <ul class='dropdown-content' id='profile-dropdown'>
+          {{#if (isAgente user.Rol)}}
+            <li><a class='grey-text text-darken-1 modal-trigger' href='#modalMisEstadisticas' id='misEstadisticas'><i class='material-icons'>insert_chart</i>
+                <span data-i18n='Mis estadisticas'>Mis estadisticas</span>
+              </a></li>
+          {{/if}}
+          {{! <li><a class='grey-text text-darken-1 modal-trigger' href='#modal1'><i class='material-icons'>lock_outline</i>Password</a></li> }}
+          <li><a class='grey-text text-darken-1' href='/logout'><i class='material-icons'>keyboard_tab</i> Logout</a>
+          </li>
+
+        </ul>
+      </div>
+
+    </nav>
+
+    <!-- Modal Mis estadisticas -->
+    <div id='modalMisEstadisticas' class='modal modal-fixed-footer'>
+      <div class='modal-content'>
+        <div class='row'>
+          <div class='col s12'>
+            <h4 data-i18n='Mis estadisticas'>Mis estadisticas</h4>
+          </div>
+
+          <div class='row'>
+            <div class='col s12 m6'>
+              <div class='card animate fadeRight'>
+                <div class='card-content green lighten-1 white-text'>
+                  <p class='card-stats-title'><i class='material-icons'>person</i>
+                    <span data-i18n='Chats atendidos' id='labelChatsAtendidos'>Chats atendidos</span>
+                  </p>
+                  <h4 class='card-stats-number white-text' id='chatsAtendidos'>0</h4>
+                </div>
+              </div>
+            </div>
+
+            <div class='col s12 m6'>
+              <div class='card animate fadeLeft'>
+                <div class='card-content orange lighten-1 white-text'>
+                  <p class='card-stats-title'><i class='material-icons'>timer</i>
+                    <span data-i18n='Tiempo promedio' id='labelTiempoPromedio'>Tiempo promedio</span>
+                  </p>
+                  <h4 class='card-stats-number white-text' id='tiempoPromedio'>0</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--Tabla chats atendidos -->
+          <div class='row'>
+            <div class='col s12 m12 l12'>
+              <div id='bordered-table' class='card card card-default scrollspy'>
+                <div class='card-content'>
+                  <h4 class='card-title' data-i18n='Chats atendidos'>Chats atendidos</h4>
+                  <div class='row'>
+                    <div class='col s12'>
+                    </div>
+                    <div class='col s12'>
+                      <table class='bordered striped'>
+                        <thead style='background: #276e90  !important; color: #fff'>
+                          <tr>
+                            <th data-i18n='Cliente'>Cliente</th>
+                            <th data-i18n='Tipificacion'>Tipificacion</th>
+                            <th data-i18n='Fecha inicial'>Fecha inicio</th>
+                            <th data-i18n='Fecha final'>Fecha fin</th>
+                            <th data-i18n='Duracion'>Duracion</th>
+                          </tr>
+                        </thead>
+                        <tbody id='bodyChatsAtendidos'>
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Tabla chats atendidos-->
+
+        </div>
+      </div>
+      <div class='modal-footer'>
+        <a href='#!' class='modal-action modal-close waves-effect waves-green btn-flat'>Close</a>
+      </div>
+    </div>
+    <!-- FIN Modal Mis estadisticas  -->
+
+    <!-- Modal cambiar Password -->
+    <div id='modal1' class='modal modal-fixed-footer'>
+      <div class='modal-content'>
+        <div class='row'>
+          <div class='col s12'>
+            <h4>Cambiar password</h4>
+          </div>
+          <form id='formCambiarPassword' action='/usuarios/cambiarPassword' method='post' class='col s12'>
+            <div class='row'>
+              <div class='input-field col s12'>
+                <input id='passwordActual' type='password' name='passwordActual' required />
+                <label for='passwordActual'>Contraseña actual</label>
+              </div>
+            </div>
+            <div class='row'>
+              <div class='input-field col s12'>
+                <input id='passwordNueva1' type='password' name='passwordNueva1' required />
+                <label for='passwordNueva1'>Contraseña nueva</label>
+              </div>
+            </div>
+            <div class='row'>
+              <div class='input-field col s12'>
+                <input id='passwordNueva2' type='password' name='passwordNueva2' required />
+                <label for='passwordNueva2'>Contraseña nueva</label>
+              </div>
+            </div>
+            <div class='row'>
+              <div class='input-field col s12'>
+                <button id='btnCambiarPassword' class='btn waves-effect waves-light color-oscuro right' type='submit' name='action'>Cambiar contraseña
+                  <i class='bx bx-lock'></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class='modal-footer'>
+        <a href='#!' class='modal-action modal-close waves-effect waves-green btn-flat'>Close</a>
+      </div>
+    </div>
+    <!-- FIN Modal cambiar Password -->
+
+  </div>
+</header>
+<!-- END: Header-->

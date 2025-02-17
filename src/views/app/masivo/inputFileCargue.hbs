@@ -1,0 +1,30 @@
+<div id='main'>
+
+  <div class='row center'>
+
+    <h1 style='padding: 1rem;'>Cargar archivo excel</h1>
+    <div class='col s12 m8 offset-m2'>
+
+      <div class='container' style='padding: 2rem;'>
+        <img src='/img/undraw_Messages_re_qy9x.svg' class='img_cargarExcel' alt='Imagen Envio' style='width: 60%; height: auto;' />
+      </div>
+
+      <form action='/mensajeria/masivo/guarde-local-excel' method='POST' enctype='multipart/form-data'>
+        <div class='file-field input-field'>
+          <div class='red darken-3 btn'>
+            <span>Archivo</span>
+            <input type='file' id='fileExcel' name='fileExcel' />
+          </div>
+          <div class='file-path-wrapper'>
+            <input class='file-path validate' type='text' placeholder='Cargar archivo Excel' />
+          </div>
+        </div>
+        <button id='btnCargarExcel' class='waves-effect waves-red red darken-3 btn' type='submit'>Cargar</button>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<script src='/js/guardianCargadores.js'></script>
+<script src='/js/masivo/inputFileCargue.js'></script>

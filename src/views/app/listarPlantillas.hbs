@@ -1,0 +1,53 @@
+<div id="main">
+  <div class="row">
+    <div class="col s12">
+      <div class="container">
+        <div class="section ">
+          
+          <div class="row">
+            <div class="col s12 m12 l12">
+              <div id="bordered-table" class="card card card-default scrollspy">
+                <div class="card-content">
+                  <h4 class="card-title" data-i18n="Lista de plantillas">Lista de plantillas </h4>
+                  <div class="row">
+                    <div class="col s12">
+                    </div>
+                    <div class="col s12">
+                      <table class="bordered striped">
+                        <thead style="background: #276e90  !important; color: #fff">
+                          <tr>
+                            <th data-i18n="Nombre">Nombre</th>
+                            <th data-i18n="Contenido">Contenido</th>
+                            <th data-i18n="Accion">Acción</th>
+                          </tr>
+                        </thead>
+                       <tbody>
+                          {{#each listaPlantillas}}
+                          <tr>
+                            <td>{{this.PLA_CNOMBRE}}</td>
+                            <td>{{this.PLA_CCONTENIDO}}</td>
+                            <td>
+                              <a class="btn waves-effect waves-light color-oscuro" id="editar"
+                                href="/plantillas/actualizarPlantilla/{{this.EnCrypt}}"><i
+                                  class='bx bx-edit-alt'></i></a>
+                              <a class="btn waves-effect waves-light red accent-2" id="borrar" eliminarPlantilla="{{this.EnCrypt}}"><i
+                                  class='bx bx-trash-alt'></i></a>
+                            </td>
+                          </tr>
+                          {{/each}}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/listarPlantillas.js"></script>

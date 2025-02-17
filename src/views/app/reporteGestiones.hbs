@@ -1,0 +1,137 @@
+<div id="main">
+  <div class="row">
+    <div class="col s12">
+      <div class="container">
+        <div class="section section-data-tables">
+
+          <div class="card">
+            <div class="card-content">
+              <div class="card-title">
+                <h4 class="card-title" data-i18n="Reporte interacciones">Reporte interacciones</h4>
+                <div class="row">
+                  <div class="col s12">
+                    <div class="input-field col s12 m3 l3">
+                      <input type="text" name="fechaInicial" id="fechaInicial" class="datepicker">
+                      <label for="fechaInicial" data-i18n="Fecha inicial">Fecha inicial</label>
+                    </div>
+                    <div class="input-field col s12 m3 l3">
+                      <input type="text" name="fechaFinal" id="fechaFinal" class="datepicker">
+                      <label for="fechaFinal" data-i18n="Fecha final">Fecha final</label>
+                    </div>
+
+                    <div class="input-field col s12 m3 l3">
+                      <input placeholder="No. Documento" id="inpNoDocumento" type="text" class="validate">
+                      <label for="inpNoDocumento">Documento paciente</label>
+                    </div>
+
+                    <div class="input-field col s12 m3 l3">
+                      <a class="waves-effect waves-light btn color-oscuro" id="Buscar"><i
+                          class='bx bx-search-alt'></i></a>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Datatable Lista usuarios -->
+          <div class="row">
+            <div class="col s12">
+              <div class="card">
+                <div class="card-content">
+                  <div class="row">
+                    <div class="col s12">
+                      <table id="page-length-option" class="display">
+                        <thead>
+                          <tr>
+                            <th data-i18n="Estado solicitud">Estado solicitud</th>
+                            <th data-i18n="Se comunica">Se comunica</th>
+                            <th data-i18n="Tipo documento">Tipo documento</th>
+                            <th data-i18n="Documento">Documento</th>
+                            <th data-i18n="Nombre paciente">Nombre paciente</th>
+                            <th data-i18n="Parentezco">Parentezco</th>
+                            <th data-i18n="Telefonos">Telefonos</th>
+                            <th data-i18n="Correo">Correo</th>
+                            <th data-i18n="Paciente hospitalizado">Paciente hospitalizado</th>
+                            <th data-i18n="Sede">Sede</th>
+                            <th data-i18n="Solicitud">Solicitud</th>
+                            <th data-i18n="Consulta médicina especializada">Consulta médicina especializada</th>
+                            <th data-i18n="Consulta es">Consulta es</th>
+                            <th data-i18n="Programa">Programa</th>
+                            <th data-i18n="EPS Remite">EPS Remite</th>
+                            <th data-i18n="Fecha expedición">Fecha expedición</th>
+                            <th data-i18n="Fecha vencimiento">Fecha vencimiento</th>
+                            <th data-i18n="Rango fechas desea">Rango fechas desea</th>
+                            <th data-i18n="Médico preferencia">Médico preferencia</th>
+                            <th data-i18n="Consulta externa">Consulta externa</th>
+                          </tr>
+                        </thead>
+                        <tbody id="bodyListaInteracciones"></tbody>
+                        <tfoot>
+                           <tr>
+                            <th data-i18n="Estado solicitud">Estado solicitud</th>
+                            <th data-i18n="Se comunica">Se comunica</th>
+                            <th data-i18n="Tipo documento">Tipo documento</th>
+                            <th data-i18n="Documento">Documento</th>
+                            <th data-i18n="Nombre paciente">Nombre paciente</th>
+                            <th data-i18n="Parentezco">Parentezco</th>
+                            <th data-i18n="Telefonos">Telefonos</th>
+                            <th data-i18n="Correo">Correo</th>
+                            <th data-i18n="Paciente hospitalizado">Paciente hospitalizado</th>
+                            <th data-i18n="Sede">Sede</th>
+                            <th data-i18n="Solicitud">Solicitud</th>
+                            <th data-i18n="Consulta médicina especializada">Consulta médicina especializada</th>
+                            <th data-i18n="Consulta es">Consulta es</th>
+                            <th data-i18n="Programa">Programa</th>
+                            <th data-i18n="EPS Remite">EPS Remite</th>
+                            <th data-i18n="Fecha expedición">Fecha expedición</th>
+                            <th data-i18n="Fecha vencimiento">Fecha vencimiento</th>
+                            <th data-i18n="Rango fechas desea">Rango fechas desea</th>
+                            <th data-i18n="Médico preferencia">Médico preferencia</th>
+                            <th data-i18n="Consulta externa">Consulta externa</th>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- FIN Datatable Lista usuarios -->
+
+          <!-- Modal Structure -->
+          <div id="modalVerChat" class="modal modal-fixed-footer">
+            <div class="modal-content">
+    
+              <div class="row">
+                <div class="col s12">
+                  <div class="card">
+                    <div class="card-content">
+                      <div class="row">
+                        <div class="col s12" id="contenedorChat">
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <a href="#" class="waves-effect waves-light btn border-round color-oscuro ml-4 left" id="descargarChat" data-i18n="Descargar">Descargar</a>
+              <a href="#" class="modal-action modal-close waevs-effect waves-green btn-flat ">Close</a>
+            </div>
+          </div>
+          <!-- Modal Structure -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/reporteGestiones.js"></script>

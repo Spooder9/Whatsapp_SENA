@@ -1,0 +1,127 @@
+<div id="main">
+  <div class="row">
+    <div class="col s12">
+      <div class="container">
+        <div class="section section-data-tables">
+
+          <div class="card">
+            <div class="card-content">
+              <div class="card-title">
+                <h4 class="card-title" data-i18n="Reporte Tipificaciones">Reporte Tipificaciones</h4>
+                <div class="row">
+                  <div class="col s12">
+                    <div class="input-field col s12 m3 l3">
+                      <label for="fechaInicial" data-i18n="Fecha inicial">Fecha inicial</label>
+                      <input type="text" name="fechaInicial" id="fechaInicial" class="datepicker ctrl_visual_campo" autocomplete="off">
+                      <div class="invalid-feedback">
+                      </div>
+                    </div>
+                    <div class="input-field col s12 m3 l3">
+                      <label for="fechaFinal" data-i18n="Fecha final">Fecha final</label>
+                      <input type="text" name="fechaFinal" id="fechaFinal" class="datepicker ctrl_visual_campo" autocomplete="off">
+                      <div class="invalid-feedback">
+                      </div>
+                    </div>
+
+                    {{!-- <div class="input-field col s12 m3 l3">
+                      <select class="select2 browser-default" id="listaAgentes">
+                        <option value="0">ALL</option>
+                        {{#each datasqlListaAgentes}}
+                        <option value="{{this.PKUSU_NCODIGO}}">{{this.USU_CUSUARIO}}</option>
+                        {{/each}}
+                      </select>
+                    </div> --}}
+
+                    <div class="input-field col s12 m3 l3">
+                      <a class="waves-effect waves-light btn color-oscuro" id="Buscar"><i class='bx bx-search-alt'></i></a>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Datatable Lista usuarios -->
+          <div class="row">
+            <div class="col s12">
+              <div class="card">
+                <div class="card-content">
+                  <div class="row">
+                    <div class="col s12">
+                      <table id="page-length-option" class="display">
+                        <thead>
+                          <tr>
+                            <th data-i18n="NÚMERO">NÚMERO</th>
+                            <th data-i18n="FECHA">FECHA</th>
+                            <th data-i18n="ORIGEN">ORIGEN</th>
+                            <th data-i18n="CASO">CASO</th>
+                            <th data-i18n="CONTACTO">CONTACTO</th>
+                            <th data-i18n="INICIO">INICIO</th>
+                            <th data-i18n="FIN">FIN</th>
+                            <th data-i18n="DESCRIPCIÓN">DESCRIPCIÓN</th>
+                            <th data-i18n="TMO">TMO</th>
+                            <th data-i18n="RESPONSABLE">RESPONSABLE</th>
+                          </tr>
+                        </thead>
+
+                        <tbody id="bodyListaInteracciones">
+
+                        </tbody>
+                        <tfoot>
+                          <tr>
+                            <th data-i18n="NÚMERO">NÚMERO</th>
+                            <th data-i18n="FECHA">FECHA</th>
+                            <th data-i18n="ORIGEN">ORIGEN</th>
+                            <th data-i18n="CASO">CASO</th>
+                            <th data-i18n="CONTACTO">CONTACTO</th>
+                            <th data-i18n="INICIO">INICIO</th>
+                            <th data-i18n="FIN">FIN</th>
+                            <th data-i18n="DESCRIPCIÓN">DESCRIPCIÓN</th>
+                            <th data-i18n="TMO">TMO</th>
+                            <th data-i18n="RESPONSABLE">RESPONSABLE</th>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- FIN Datatable Lista usuarios -->
+
+          <!-- Modal Structure -->
+          <div id="modalVerChat" class="modal modal-fixed-footer">
+            <div class="modal-content">
+
+              <div class="row">
+                <div class="col s12">
+                  <div class="card">
+                    <div class="card-content">
+                      <div class="row">
+                        <div class="col s12" id="contenedorChat">
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <a href="#" class="waves-effect waves-light btn border-round color-oscuro ml-4 left" id="descargarChat" data-i18n="Descargar">Descargar</a>
+              <a href="#" class="modal-action modal-close waevs-effect waves-green btn-flat ">Close</a>
+            </div>
+          </div>
+          <!-- Modal Structure -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/reporteInteracciones.js"></script>

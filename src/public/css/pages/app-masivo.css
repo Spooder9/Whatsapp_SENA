@@ -1,0 +1,41 @@
+.cont-plantilla {
+  background-color: #ebe6e1;
+  padding: 2rem;
+  max-width: 420px;
+}
+
+.chat-plantilla {
+  background-color: white;
+  padding: 1.5rem;
+  filter: drop-shadow(rgba(0, 0, 0, 0.2) 0px 1px 1px);
+  border-radius: 0px 6px 6px;
+}
+
+.chat-plantilla::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -10px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 10px 10px 0;
+  border-color: transparent transparent white transparent;
+  transform: rotate(176deg);
+}
+
+.button-wp{
+  background-color: white;
+  cursor: pointer;
+  margin-top: .5rem;
+  border-radius: 6px;
+  text-align: center;
+  filter: drop-shadow(rgba(0, 0, 0, 0.2) 0px 1px 1px);
+  padding: .5rem;
+  color: #007dff;
+}
+
+.footer-plantilla {
+  font-size: small;
+  color: #a3a3a3;
+}
