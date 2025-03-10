@@ -11,6 +11,7 @@ const qrcode = require('qrcode-terminal');
 const { format, parse, isValid, addDays } = require('date-fns');
 const { es, tr } = require('date-fns/locale')
 const mime = require('mime-types');
+const express = require("express");
 
 
 const DICC = {
@@ -118,6 +119,46 @@ const buildMenu = async (nombreMenu) => {
 	}
 }
 
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+app.use(express.json());
+
+
+/**
+ * EndPoint para enviar mensaje a usuario externo
+ * Además guarda cada mensaje del bot en Base de datos
+ * @param {String} whatsappNum Formato 573106542257@c.us
+ * @param {String} textBody El texto del mensaje (si viene un file, esto por defecto viene con string vacio)
+ */
+// Endpoint para enviar mensajes
+app.post("/send-message", async (req, res) => {
+	console.log(req.body);
+	
+	const { whatsappNum, textBody } = req.body;
+  
+	if (!whatsappNum || !textBody) {
+	  return res.status(400).json({ error: "Número y mensaje son requeridos" });
+	}
+  
+	try {
+	  const message = await clientWP.sendMessage(whatsappNum, textBody);
+	  res.json({ success: true, messageId: message.id._serialized });
+	} catch (error) {
+	  console.error("Error al enviar mensaje:", error);
+	  res.status(500).json({ success: false, error: error.message });
+	}
+  });
+
+
+// Iniciar servidor
+app.listen(PORT, () => {
+	console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
+});
+
+
+
+
 /**
  * Función que usa el Bot para enviar mensaje a usuario externo
  * Además guarda cada mensaje del bot en Base de datos
@@ -127,10 +168,12 @@ const buildMenu = async (nombreMenu) => {
  */
 const sendMessage = async ({ whatsappNum, textBody, lastrowid, interaccion = true }) => {
 	/* try { */
-
-	if (whatsappNum.length < 16) {
-		const whatsappNumFormateado = `${whatsappNum}@c.us`; // 573053599685@c.us
-		const Message = await clientWP.sendMessage(whatsappNumFormateado, textBody);
+	console.log(whatsappNum.length);
+	console.log(whatsappNum);
+	
+	
+	if (whatsappNum.length <= 17) {
+		const Message = await clientWP.sendMessage(whatsappNum, textBody);
 		console.log('WA Message ====> ', Message);
 		const botWhatsappNum = Message.to.replace('@c.us', '');
 		const userWhatsappNum = Message.from.replace('@c.us', '');
@@ -426,7 +469,7 @@ async function arbol(WHATSAPP_FROM, WHATSAPP_BODY, ID_TBL_CHATS_MANAGEMENT) {
 		let FIN_ARBOL = 'MSG_FIN';
 
 		// * OBTENER EL FLUJO DEL ARBOL PARA EL CHAT RECIBIDO
-		const sqlSelect = `SELECT GES_CULT_MSGBOT AS ESTADO_ARBOL FROM ${DB_NAME}.tbl_chats_management WHERE PKGES_CODIGO = ? AND GES_NUMERO_COMUNICA = ? AND GES_CESTADO = ? ORDER BY PKGES_CODIGO DESC LIMIT 1`;
+		const sqlSelect = `SELECT GES_CULT_MSGBOT AS ESTADO_ARBOL, GES_ESTADO_CASO FROM ${DB_NAME}.tbl_chats_management WHERE PKGES_CODIGO = ? AND GES_NUMERO_COMUNICA = ? AND GES_CESTADO = ? ORDER BY PKGES_CODIGO DESC LIMIT 1`;
 		const [resSelect] = await connMySQL.promise().query(sqlSelect, [ID_TBL_CHATS_MANAGEMENT, WHATSAPP_FROM, 'Activo']);
 
 		// * SI EXISTE UN REGISTRO PARA EL CHAT
@@ -436,11 +479,18 @@ async function arbol(WHATSAPP_FROM, WHATSAPP_BODY, ID_TBL_CHATS_MANAGEMENT) {
 			// * SI EL ESTADO ACTUAL ES 'USUARIO_HABLA_1RA_VEZ'
 			if (ESTADO_ACTUAL_ARBOL === 'USUARIO_HABLA_1RA_VEZ') {
 				// * NOTIFICAMOS AL USUARIO QUE SERA TRANSFERIDO CON UN ASESOR
-				await sendMessage({ whatsappNum, textBody: SMS_TRANSFERENCIA, ID_TBL_CHATS_MANAGEMENT });
-
+				await sendMessage({ whatsappNum: WHATSAPP_FROM, textBody: SMS_TRANSFERENCIA, ID_TBL_CHATS_MANAGEMENT });
 				// * ACTUALIZAMOS EL ESTADO DEL CHAT EN LA BASE DE DATOS
 				const sqlUpdate = `UPDATE ${DB_NAME}.tbl_chats_management SET GES_CULT_MSGBOT = ? WHERE PKGES_CODIGO = ?`;
 				await connMySQL.promise().query(sqlUpdate, [FIN_ARBOL, ID_TBL_CHATS_MANAGEMENT]);
+				return;
+
+			} else if (ESTADO_ACTUAL_ARBOL === "MSG_FIN" && resSelect[0].GES_ESTADO_CASO === "OPEN") {
+				// * NOTIFICAMOS AL USUARIO QUE SE ENCUENTRA A LA ESPERA DE ATENCION
+				await sendMessage({ whatsappNum: WHATSAPP_FROM, textBody: "Sigues a la espera de atención.", ID_TBL_CHATS_MANAGEMENT });
+				// * ACTUALIZAMOS EL ESTADO DEL CHAT EN LA BASE DE DATOS
+				const sqlUpdate = `UPDATE ${DB_NAME}.tbl_chats_management SET GES_CULT_MSGBOT = ?, GES_ESTADO_CASO = ? WHERE PKGES_CODIGO = ?`;
+				await connMySQL.promise().query(sqlUpdate, [FIN_ARBOL, "OPEN", ID_TBL_CHATS_MANAGEMENT]);
 				return;
 			}
 		}
