@@ -167,7 +167,6 @@ app.listen(PORT, () => {
  * @param {String} lastrowid PKGES_CODIGO de la intereacción
  */
 const sendMessage = async ({ whatsappNum, textBody, lastrowid, interaccion = true }) => {
-	/* try { */	
 	
 	if (whatsappNum.length <= 17) {
 		const Message = await clientWP.sendMessage(whatsappNum, textBody);
