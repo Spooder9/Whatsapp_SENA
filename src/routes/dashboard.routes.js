@@ -29,29 +29,10 @@ router.get("/actualizarDashboard", isSupervisorOrAdministrator, async (req, res)
       datasqlChatsEspera[i].isWeb = resRealPhone.isWeb;
     }
 
-    sqlChatsActivos = `SELECT * FROM ${DB_NAME}.view_chats_activos`;
-    let [datasqlChatsActivos] = await connMySQL.promise().query(sqlChatsActivos);
-
-    for (let i = 0; i < datasqlChatsActivos.length; i++) {
-      const chat = datasqlChatsActivos[i];
-      const resRealPhone = await getRealPhone({ codigo: chat.cliente });
-      datasqlChatsActivos[i].userLabel = resRealPhone.userLabel;
-      datasqlChatsActivos[i].isWeb = resRealPhone.isWeb;
-    }
-
-    //CHATS Grupos 
-    sqlChatsGrupos = `SELECT * FROM ${DB_NAME}.view_chats_kpis_grupos`;
-    let [datasqlChatsGrupos] = await connMySQL.promise().query(sqlChatsGrupos);
-    console.log(datasqlChatsGrupos)
-
+    datasqlChatsActivos, datasqlChatsGrupos, datasqlAgentesConectados, datasqlAgentesEstado, datasqlAsaColaGeneral = []
+  
     sqlChatsEstado = `SELECT * FROM ${DB_NAME}.view_chats_estado`;
     let [datasqlChatsEstado] = await connMySQL.promise().query(sqlChatsEstado);
-
-    sqlAgentesConectados = `SELECT * FROM ${DB_NAME}.view_agentes_conectados`;
-    let [datasqlAgentesConectados] = await connMySQL.promise().query(sqlAgentesConectados);
-
-    sqlAgentesEstado = `SELECT * FROM ${DB_NAME}.view_agentes_estado`;
-    let [datasqlAgentesEstado] = await connMySQL.promise().query(sqlAgentesEstado);
 
     res.json({ datasqlChatsEspera, datasqlChatsActivos, datasqlChatsGrupos, datasqlChatsEstado, datasqlAgentesConectados, datasqlAgentesEstado, datasqlAsaColaGeneral });
 

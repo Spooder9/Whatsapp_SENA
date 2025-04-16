@@ -12,6 +12,7 @@ const { format, parse, isValid, addDays } = require('date-fns');
 const { es, tr } = require('date-fns/locale')
 const mime = require('mime-types');
 const express = require("express");
+const { log } = require('console');
 
 
 const DICC = {
@@ -170,7 +171,6 @@ const sendMessage = async ({ whatsappNum, textBody, lastrowid, interaccion = tru
 	
 	if (whatsappNum.length <= 17) {
 		const Message = await clientWP.sendMessage(whatsappNum, textBody);
-		console.log('WA Message ====> ', Message);
 		const botWhatsappNum = Message.to.replace('@c.us', '');
 		const userWhatsappNum = Message.from.replace('@c.us', '');
 		const idMensaje = Message._data.id.id;
@@ -352,42 +352,10 @@ async function manageTree(msgIn) {
 			let ESTADO_REGISTRO = 'Activo';
 			let WHATSAPP_FROM_CLEAN = msgIn.from.replace(/@g\.us|@c\.us/g, '');
 
-			// * IDENTIFICAMOS EL CONTACTO DEL CHAT
-			if (WHATSAPP_FROM_CLEAN.length > 12) {
-				// * BUSCAMOS SI EL CHAT ES DE UN GRUPO Y MANEJAMOS EL ESCENARIO					
-				const sql_buscar_grupo = `SELECT grp_nombre AS NOMBRE_GRUPO FROM ${DB_NAME}.tbl_grupo WHERE grp_numero = ?`;
-				const result_buscar_grupo = await connMySQL.promise().query(sql_buscar_grupo, [msgIn.from]);
-				if (result_buscar_grupo[0].length > 0) {
-					// ? SI TENEMOS RESULTADOS, ES UN GRUPO Y AGREGAMOS EL NOMBRE DEL GRUPO
-					CONTACTO_INTERNO = result_buscar_grupo[0][0].NOMBRE_GRUPO;
-				} else {
-					// ? SI NO MANTENEMOS EL FROM DEL CHAT
-					CONTACTO_INTERNO = msgIn.from;
-				}
-
-				// ? DEFINICION DE VARIABLES
-				TIPO_CHAT = 'GRUPAL';
-				CODIGO_ASIGNACION = '*';
-				ESTADO_CASO = 'ATTENDING';
-				CULT_MSGBOT = 'MSG_FIN';
-			} else {
-				// * SI NO ES UN GRUPO, BUSCAMOS SI EL CONTACTO EXISTE EN EL DIRECTORIO DE CONTACTOS Y MANEJAMOS EL ESCENARIO					
-				// ? PREPARAMOS LA VARIABLE PARA BUSCAR EL CONTACTO EN EL DIRECTORIO DE CONTACTOS
-				const WHATSAPP_FROM_CLEAN_FORMATEADO = WHATSAPP_FROM_CLEAN.substring(2, 13);
-				const sql_buscar_contacto = `SELECT drcont_nombres_apellidos_contacto AS NOMBRE_CONTACTO FROM ${DB_NAME}.tbl_directorio_contacto WHERE drcont_num_contacto = ?`;
-				const result_buscar_contacto = await connMySQL.promise().query(sql_buscar_contacto, [WHATSAPP_FROM_CLEAN_FORMATEADO]);
-				if (result_buscar_contacto[0].length > 0) {
-					// ? SI TENEMOS RESULTADOS, ES UN CONTACTO Y AGREGAMOS EL NOMBRE DEL CONTACTO
-					CONTACTO_INTERNO = result_buscar_contacto[0][0].NOMBRE_CONTACTO;
-				} else {
-					// ? SI NO MANTENEMOS EL FROM DEL CHAT FORMATEADO A 10 DIGITOS
-					CONTACTO_INTERNO = WHATSAPP_FROM_CLEAN_FORMATEADO;
-				}
-
-				// ? DEFINICION DE VARIABLES
-				TIPO_CHAT = 'INDIVIDUAL';
-				CULT_MSGBOT = 'USUARIO_HABLA_1RA_VEZ';
-			}
+			// ? DEFINICION DE VARIABLES
+			TIPO_CHAT = 'INDIVIDUAL';
+			CULT_MSGBOT = 'USUARIO_HABLA_1RA_VEZ';
+			
 
 			// * BUSCAMOS EL ULTIMO REGISTRO PARA EL USUARIO EN LA TABLA CHATS MANAGEMENT
 			const sql_consulta_chat = `SELECT PKGES_CODIGO AS ID_REGISTRO, GES_ESTADO_CASO AS ESTADO_CASO, GES_CULT_MSGBOT AS ESTADO_ARBOL FROM ${DB_NAME}.tbl_chats_management WHERE GES_NUMERO_COMUNICA = ? AND GES_CESTADO = ? ORDER BY PKGES_CODIGO DESC LIMIT 1`
@@ -401,7 +369,7 @@ async function manageTree(msgIn) {
 
 				// * ACTUALIZAMOS EL REGISTRO EN LA TABLA CHATS MANAGEMENT
 				const data_actualizar_chat = {
-					GES_NOMBRE_COMUNICA: CONTACTO_INTERNO,
+					GES_NOMBRE_COMUNICA: msgIn.notifyName,
 					GES_ULTIMO_RECIBIDO: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
 				}
 				const condicionales_actualizar_chat = {
@@ -427,7 +395,7 @@ async function manageTree(msgIn) {
 					GES_ULT_INTERACCION: ULT_INTERACCION,
 					GES_TIPO_CANAL: TIPO_CANAL,
 					GES_CHORA_INICIO_GESTION: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
-					GES_NOMBRE_COMUNICA: CONTACTO_INTERNO,
+					GES_NOMBRE_COMUNICA: msgIn.notifyName,
 					GES_CTIPO: TIPO_GESTION,
 					GES_CESTADO: ESTADO_REGISTRO
 				}
@@ -453,47 +421,272 @@ async function manageTree(msgIn) {
 /**
  * @author Brayan Yanez
  * @created 14 de Mayo de 2024
- * @lastModified 14 de Mayo de 2024
+ * @lastModified 15 de Abril de 2025
  * @version 1.0.0
  * 
  */
 async function arbol(WHATSAPP_FROM, WHATSAPP_BODY, ID_TBL_CHATS_MANAGEMENT) {
 	try {
-		// * VARIABLES DE CONTROL
-		let SMS_TRANSFERENCIA = 'Te vamos a transferir con un asesor...';
-		let ESTADO_ACTUAL_ARBOL = '';
-		let FIN_ARBOL = 'MSG_FIN';
-
-		// * OBTENER EL FLUJO DEL ARBOL PARA EL CHAT RECIBIDO
-		const sqlSelect = `SELECT GES_CULT_MSGBOT AS ESTADO_ARBOL, GES_ESTADO_CASO FROM ${DB_NAME}.tbl_chats_management WHERE PKGES_CODIGO = ? AND GES_NUMERO_COMUNICA = ? AND GES_CESTADO = ? ORDER BY PKGES_CODIGO DESC LIMIT 1`;
-		const [resSelect] = await connMySQL.promise().query(sqlSelect, [ID_TBL_CHATS_MANAGEMENT, WHATSAPP_FROM, 'Activo']);
-
-		// * SI EXISTE UN REGISTRO PARA EL CHAT
-		if (resSelect.length) {
-			ESTADO_ACTUAL_ARBOL = resSelect[0].ESTADO_ARBOL;
-
-			// * SI EL ESTADO ACTUAL ES 'USUARIO_HABLA_1RA_VEZ'
-			if (ESTADO_ACTUAL_ARBOL === 'USUARIO_HABLA_1RA_VEZ') {
-				// * NOTIFICAMOS AL USUARIO QUE SERA TRANSFERIDO CON UN ASESOR
-				await sendMessage({ whatsappNum: WHATSAPP_FROM, textBody: SMS_TRANSFERENCIA, ID_TBL_CHATS_MANAGEMENT });
-				// * ACTUALIZAMOS EL ESTADO DEL CHAT EN LA BASE DE DATOS
-				const sqlUpdate = `UPDATE ${DB_NAME}.tbl_chats_management SET GES_CULT_MSGBOT = ? WHERE PKGES_CODIGO = ?`;
-				await connMySQL.promise().query(sqlUpdate, [FIN_ARBOL, ID_TBL_CHATS_MANAGEMENT]);
-				return;
-
-			} else if (ESTADO_ACTUAL_ARBOL === "MSG_FIN" && resSelect[0].GES_ESTADO_CASO === "OPEN") {
-				// * NOTIFICAMOS AL USUARIO QUE SE ENCUENTRA A LA ESPERA DE ATENCION
-				await sendMessage({ whatsappNum: WHATSAPP_FROM, textBody: "Sigues a la espera de atención.", ID_TBL_CHATS_MANAGEMENT });
-				// * ACTUALIZAMOS EL ESTADO DEL CHAT EN LA BASE DE DATOS
-				const sqlUpdate = `UPDATE ${DB_NAME}.tbl_chats_management SET GES_CULT_MSGBOT = ?, GES_ESTADO_CASO = ? WHERE PKGES_CODIGO = ?`;
-				await connMySQL.promise().query(sqlUpdate, [FIN_ARBOL, "OPEN", ID_TBL_CHATS_MANAGEMENT]);
-				return;
+	  // * VARIABLES DE CONTROL
+	  let mensaje = '';
+	  let nuevoEstado = '';
+	  const FIN_ARBOL = 'MSG_FIN';
+	  // MENSAJE_CONTACTO se utilizará como respuesta final en todas las ramas
+	  const MENSAJE_CONTACTO = "Gracias por contactar ABC Seguros. Para gestionar su caso, por favor llame al 123456789 o envíe un correo a info@abcseguros.com.";
+  
+	  // * OBTENER EL FLUJO DEL ÁRBOL PARA EL CHAT RECIBIDO
+	  const sqlSelect = `
+		SELECT GES_CULT_MSGBOT AS ESTADO_ARBOL, GES_ESTADO_CASO 
+		FROM ${DB_NAME}.tbl_chats_management 
+		WHERE PKGES_CODIGO = ? AND GES_NUMERO_COMUNICA = ? AND GES_CESTADO = ? 
+		ORDER BY PKGES_CODIGO DESC LIMIT 1`;
+	  const [resSelect] = await connMySQL.promise().query(sqlSelect, [ID_TBL_CHATS_MANAGEMENT, WHATSAPP_FROM, 'Activo']);
+	  
+	  // * SI EXISTE UN REGISTRO PARA EL CHAT
+	  if (resSelect.length) {
+		let ESTADO_ACTUAL_ARBOL = resSelect[0].ESTADO_ARBOL;
+		
+		switch (ESTADO_ACTUAL_ARBOL) {
+		  // Estado inicial: el usuario habla por primera vez
+		  case 'USUARIO_HABLA_1RA_VEZ':
+			mensaje = 
+			  "Bienvenido a ABC Seguros.\n" +
+			  "Por favor, elija una opción:\n" +
+			  "1. Consulta de Cotizaciones\n" +
+			  "2. Gestión de Reclamos y Siniestros\n" +
+			  "3. Consulta de Pólizas y Servicios\n" +
+			  "4. Asesoría y Consultas Generales";
+			nuevoEstado = 'BIENVENIDA';
+			break;
+			
+		  // Estado de bienvenida: se espera la selección principal
+		  case 'BIENVENIDA': {
+			switch (WHATSAPP_BODY.trim()) {
+			  case '1':
+				mensaje = 
+				  "Has seleccionado *Consulta de Cotizaciones*.\n" +
+				  "Seleccione una opción:\n" +
+				  "1. Cotización de Seguros (Auto)\n" +
+				  "2. Tipos de Seguro (Vida, Hogar, Otros Seguros)";
+				nuevoEstado = 'COTIZACIONES_MENU';
+				break;
+			  case '2':
+				mensaje = 
+				  "Has seleccionado *Gestión de Reclamos y Siniestros*.\n" +
+				  "Elige una opción:\n" +
+				  "1. Notificación de Siniestros\n" +
+				  "2. Seguimiento de Reclamos\n" +
+				  "3. Emergencias 24H";
+				nuevoEstado = 'RECLAMOS';
+				break;
+			  case '3':
+				mensaje = 
+				  "Has seleccionado *Consulta de Pólizas y Servicios*.\n" +
+				  "Elige:\n" +
+				  "1. Consulta de Datos de Póliza\n" +
+				  "2. Actualización de Datos y Coberturas";
+				nuevoEstado = 'POLIZAS';
+				break;
+			  case '4':
+				mensaje = 
+				  "Has seleccionado *Asesoría y Consultas Generales*.\n" +
+				  "Elige:\n" +
+				  "1. Dudas sobre productos\n" +
+				  "2. Recomendaciones y Asesoramiento Técnico";
+				nuevoEstado = 'ASESORIA';
+				break;
+			  default:
+				mensaje = 
+				  "Opción no válida.\n" +
+				  "Por favor, elija una opción:\n" +
+				  "1. Consulta de Cotizaciones\n" +
+				  "2. Gestión de Reclamos y Siniestros\n" +
+				  "3. Consulta de Pólizas y Servicios\n" +
+				  "4. Asesoría y Consultas Generales";
+				nuevoEstado = 'BIENVENIDA';
+				break;
 			}
+			break;
+		  }
+		  
+		  // Ramas de Cotizaciones
+		  case 'COTIZACIONES_MENU': {
+			switch (WHATSAPP_BODY.trim()) {
+			  case '1':
+				// En lugar de procesar y derivar, se cierra directamente el flujo
+				mensaje = MENSAJE_CONTACTO;
+				nuevoEstado = FIN_ARBOL;
+				break;
+			  case '2':
+				switch (WHATSAPP_BODY.trim()) { // Se utiliza el mismo input para elegir tipo de seguro
+				  // No es necesario un switch anidado si el usuario ya eligió 2,
+				  // pero suponemos que en la siguiente interacción se elige entre opciones:
+				  default:
+					// En el siguiente mensaje se muestra el submenú de tipos de seguros
+					mensaje = 
+					  "Seleccione el tipo de seguro:\n" +
+					  "1. Vida\n" +
+					  "2. Hogar\n" +
+					  "3. Otros Seguros";
+					nuevoEstado = 'TIPOS_SEGURO';
+					break;
+				}
+				break;
+			  default:
+				mensaje = 
+				  "Opción no válida en Consulta de Cotizaciones.\n" +
+				  "Seleccione:\n" +
+				  "1. Cotización de Seguros (Auto)\n" +
+				  "2. Tipos de Seguro (Vida, Hogar, Otros Seguros)";
+				nuevoEstado = 'COTIZACIONES_MENU';
+				break;
+			}
+			break;
+		  }
+		  
+		  // Selección de Tipos de Seguro para Cotizaciones (Vida, Hogar, Otros)
+		  case 'TIPOS_SEGURO': {
+			switch (WHATSAPP_BODY.trim()) {
+			  case '1':
+				mensaje = MENSAJE_CONTACTO;
+				nuevoEstado = FIN_ARBOL;
+				break;
+			  case '2':
+				mensaje = MENSAJE_CONTACTO;
+				nuevoEstado = FIN_ARBOL;
+				break;
+			  case '3':
+				mensaje = MENSAJE_CONTACTO;
+				nuevoEstado = FIN_ARBOL;
+				break;
+			  default:
+				mensaje = 
+				  "Opción no válida en Tipos de Seguro.\n" +
+				  "Seleccione:\n1. Vida\n2. Hogar\n3. Otros Seguros";
+				nuevoEstado = 'TIPOS_SEGURO';
+				break;
+			}
+			break;
+		  }
+		  
+		  // Ramas de recolección de datos para Cotizaciones (Auto, Vida, Hogar, Otros)
+		  case 'COTIZACION_AUTO':
+		  case 'COTIZACION_VIDA':
+		  case 'COTIZACION_HOGAR':
+		  case 'COTIZACION_OTROS': {
+			// Se supone que aquí se procesan los datos ingresados; se finaliza el flujo devolviendo el mensaje de contacto
+			mensaje = MENSAJE_CONTACTO;
+			nuevoEstado = FIN_ARBOL;
+			break;
+		  }
+		  
+		  // Ramas de Gestión de Reclamos y Siniestros
+		  case 'RECLAMOS': {
+			switch (WHATSAPP_BODY.trim()) {
+			  case '1':
+				// Notificación de Siniestros: se supone que el usuario ingresa datos y se cierra el flujo
+				mensaje = MENSAJE_CONTACTO;
+				nuevoEstado = FIN_ARBOL;
+				break;
+			  case '2':
+				// Seguimiento de Reclamos: se ingresa el número de reclamo y se cierra el flujo
+				mensaje = MENSAJE_CONTACTO;
+				nuevoEstado = FIN_ARBOL;
+				break;
+			  case '3':
+				// Emergencias 24H: se cierra el flujo inmediatamente
+				mensaje = MENSAJE_CONTACTO;
+				nuevoEstado = FIN_ARBOL;
+				break;
+			  default:
+				mensaje = "Opción no válida en Gestión de Reclamos y Siniestros.\nElija 1, 2 o 3.";
+				nuevoEstado = 'RECLAMOS';
+				break;
+			}
+			break;
+		  }
+		  
+		  // Ramas de Consulta de Pólizas y Servicios
+		  case 'POLIZAS': {
+			switch (WHATSAPP_BODY.trim()) {
+			  case '1':
+				mensaje = MENSAJE_CONTACTO;
+				nuevoEstado = FIN_ARBOL;
+				break;
+			  case '2':
+				mensaje = MENSAJE_CONTACTO;
+				nuevoEstado = FIN_ARBOL;
+				break;
+			  default:
+				mensaje = "Opción no válida en Consulta de Pólizas y Servicios.\nElija 1 o 2.";
+				nuevoEstado = 'POLIZAS';
+				break;
+			}
+			break;
+		  }
+		  
+		  // Ramas de Asesoría y Consultas Generales
+		  case 'ASESORIA': {
+			switch (WHATSAPP_BODY.trim()) {
+			  case '1':
+				mensaje = MENSAJE_CONTACTO;
+				nuevoEstado = FIN_ARBOL;
+				break;
+			  case '2':
+				mensaje = MENSAJE_CONTACTO;
+				nuevoEstado = FIN_ARBOL;
+				break;
+			  default:
+				mensaje = "Opción no válida en Asesoría y Consultas Generales.\nElija 1 o 2.";
+				nuevoEstado = 'ASESORIA';
+				break;
+			}
+			break;
+		  }
+		  
+		  // Estados finales en los que se esperaba información, se finaliza siempre con el mensaje de contacto.
+		  case 'ASESORIA_DUDAS':
+		  case 'ASESORIA_RECOMIENDA':
+		  case 'POLIZA_CONSULTA':
+		  case 'POLIZA_ACTUALIZA': {
+			mensaje = MENSAJE_CONTACTO;
+			nuevoEstado = FIN_ARBOL;
+			break;
+		  }
+		  
+		  // Estado por defecto
+		  default:
+			mensaje = MENSAJE_CONTACTO;
+			nuevoEstado = FIN_ARBOL;
+			break;
 		}
+		
+		// * ENVÍO DEL MENSAJE AL USUARIO
+		await sendMessage({ whatsappNum: WHATSAPP_FROM, textBody: mensaje, ID_TBL_CHATS_MANAGEMENT });
+		
+		// * ACTUALIZAR EL ESTADO DEL CHAT EN LA BASE DE DATOS
+		// Si el flujo finaliza, se actualizan ambas columnas: GES_CULT_MSGBOT y GES_ESTADO_CASO
+		if (nuevoEstado === FIN_ARBOL) {
+		  const sqlUpdate = `
+			UPDATE ${DB_NAME}.tbl_chats_management 
+			SET GES_CULT_MSGBOT = ?, GES_ESTADO_CASO = 'CLOSE'
+			WHERE PKGES_CODIGO = ?`;
+		  await connMySQL.promise().query(sqlUpdate, [nuevoEstado, ID_TBL_CHATS_MANAGEMENT]);
+		} else {
+		  const sqlUpdate = `
+			UPDATE ${DB_NAME}.tbl_chats_management 
+			SET GES_CULT_MSGBOT = ? 
+			WHERE PKGES_CODIGO = ?`;
+		  await connMySQL.promise().query(sqlUpdate, [nuevoEstado, ID_TBL_CHATS_MANAGEMENT]);
+		}
+	  }
 	} catch (error) {
-		console.log('❌ Error en PEDRO LOPEZ → funcion arbol ===> ', error);
+	  console.error('❌ Error en la función arbol ->', error);
 	}
-}
+  }
+  
+  
+  
 
 // ! ======================================================================================================================================================================
 // !                                                              RECEPCION DE MENSAJES ENTRANTES → FUNCION handleMessageIn
@@ -506,7 +699,7 @@ async function arbol(WHATSAPP_FROM, WHATSAPP_BODY, ID_TBL_CHATS_MANAGEMENT) {
 */
 async function handleMessageIn(msgIn) {
 	return new Promise(async (resolve, reject) => {
-		console.log(msgIn);
+		console.log("Remitente = ", msgIn.from, "Body = ", msgIn.body, "to = ", msgIn.to);
 		// * BLINDAJE PARA EVITAR QUE SE PROCESAN MENSAJES DE BROADCAST (MASIVOS POR LISTAS DE DIFUSION DE WHATSAPP)
 		if (!msgIn.from.includes('status@broadcast')) {
 			try {
@@ -514,7 +707,7 @@ async function handleMessageIn(msgIn) {
 				const { lastrowid, hablandoConArbol } = await manageTree(msgIn);
 				// * VARIABLES DE CONTROL
 				let ID_TBL_CHATS_MANAGEMENT = lastrowid;
-				let WHATSAPP_FROM = '';
+				let WHATSAPP_FROM = msgIn.from;
 				let WHATSAPP_BODY = msgIn.body.trim() !== "" ? msgIn.body.trim() : null;
 				let WHATSAPP_FROM_FORMATEADO = '';
 				let WHATSAPP_TO = msgIn.to.replace(/@g\.us|@c\.us/g, '');
@@ -530,43 +723,6 @@ async function handleMessageIn(msgIn) {
 				if (ID_TBL_CHATS_MANAGEMENT > 0) {
 					// * IDENTIFICAMOS EL CONTACTO DEL CHAT
 					let WHATSAPP_FROM_CLEAN = msgIn.from.replace(/@g\.us|@c\.us/g, '');
-					if (WHATSAPP_FROM_CLEAN.length > 12) {
-						// * BUSCAMOS SI EL CHAT ES DE UN GRUPO Y MANEJAMOS EL ESCENARIO
-						const sql_buscar_grupo = `SELECT grp_nombre AS NOMBRE_GRUPO FROM ${DB_NAME}.tbl_grupo WHERE grp_numero = ?`;
-						const result_buscar_grupo = await connMySQL.promise().query(sql_buscar_grupo, [msgIn.from]);
-
-						if (result_buscar_grupo[0].length > 0) {
-							// ? SI TENEMOS RESULTADOS, ES UN GRUPO Y AGREGAMOS EL NOMBRE DEL GRUPO
-							CONTACTO_INTERNO = result_buscar_grupo[0][0].NOMBRE_GRUPO;
-						} else {
-							// ? SI NO MANTENEMOS EL FROM DEL CHAT
-							CONTACTO_INTERNO = msgIn.from;
-						}
-
-						// ? MANTENEMOS EL NUMERO DEL FROM
-						WHATSAPP_FROM = msgIn.from;
-						// ? MANTENEMOS EL NUMERO DEL FROM PARA MANEJO DEL MES_FROM
-						WHATSAPP_FROM_FORMATEADO = msgIn.from;
-					} else {
-						// * SI NO ES UN GRUPO, BUSCAMOS SI EL CONTACTO EXISTE EN EL DIRECTORIO DE CONTACTOS Y MANEJAMOS EL ESCENARIO
-						// ? PREPARAMOS LA VARIABLE PARA BUSCAR EL CONTACTO EN EL DIRECTORIO DE CONTACTOS
-						const WHATSAPP_FROM_formateado = msgIn.from.replace(/@g\.us|@c\.us/g, '').substring(2, 13);
-						const sql_buscar_contacto = `SELECT drcont_nombres_apellidos_contacto AS NOMBRE_CONTACTO FROM ${DB_NAME}.tbl_directorio_contacto WHERE drcont_num_contacto = ?`;
-						const result_buscar_contacto = await connMySQL.promise().query(sql_buscar_contacto, [WHATSAPP_FROM_formateado]);
-
-						if (result_buscar_contacto[0].length > 0) {
-							// ? SI TENEMOS RESULTADOS, ES UN CONTACTO Y AGREGAMOS EL NOMBRE DEL CONTACTO
-							CONTACTO_INTERNO = result_buscar_contacto[0][0].NOMBRE_CONTACTO;
-						} else {
-							// ? SI NO MANTENEMOS EL FROM DEL CHAT FORMATEADO A 10 DIGITOS
-							CONTACTO_INTERNO = WHATSAPP_FROM_formateado;
-						}
-
-						// ? MANTENEMOS EL NUMERO DEL FROM
-						WHATSAPP_FROM = msgIn.from;
-						// ? MANTENEMOS EL NUMERO DEL FROM PARA MANEJO DEL MES_FROM
-						WHATSAPP_FROM_FORMATEADO = msgIn.from.replace(/@g\.us|@c\.us/g, '');
-					}
 
 					// * CONTROL DE USUARIO MENSAJE RECIBIDO
 					if (!WHATSAPP_NOTIFYNAME) {

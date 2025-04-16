@@ -1,202 +1,111 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fuente general */
 body {
-  font-family: "Ubuntu", sans-serif;
-}
-.backGround {
-  width: 100%;
-  height: 100%;
-  /* background-image: url("/images/logo/background.png"); */
-  /* background: linear-gradient(249deg,#76ff03, #ffffff) !important; */
-  background: #f4f4f4;
-}
-.container-login {
-  width: 30vw;
-  height: 90vh;
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-}
-.illustration {
-  /* background-color: #BBD14F; */
-  background-image: linear-gradient(249deg, #424242, #212121);
-  /* border-radius: 1em 0 0 1em; */
-  display: flex;
-  justify-content: center; /* Centra horizontalmente los elementos */
-  align-items: center; /* Centra verticalmente los elementos */
-}
-.illustration img {
-  max-width: 80%; /* Ajusta el ancho máximo de la imagen */
-  height: auto; /* Permite que la altura se ajuste automáticamente */
-  padding: 20px;
-}
-.login {
-  background-color: rgba(172, 175, 172, 0.695);
-  /* border-radius: 0 1em 1em 0; */
-  padding: 120px 90px 40px 90px;
-}
-.mitad {
-  min-width: 50%;
-  width: auto;   
-}
-.avatar {
-  width: 200px;
-  padding: 30px;
-}
-.btn {
-  display: block;
-  width: 80%;
-  height: 50px;
-  border-radius: 25px;
-  margin: 1rem 0;
-  font-size: 1.2rem;
-  outline: none;
-  border: none;
-  background-image: linear-gradient(249deg, #424242, #212121) !important;
-  cursor: pointer;
-  color: #fff;
-  text-transform: uppercase;
-  font-family: "Poppins", sans-serif;
-  background-size: 200%;
-  transition: 0.5s;
-}
-.container-login .btn:hover {
-  background-position: right;
-}
-@media screen and (max-width: 1280px) {
-   .login {
-    background-color: rgba(172, 175, 172, 0.695);
-    /* border-radius: 0 1em 1em 0; */
-    display: flex;
-    justify-content: center; /* Centra horizontalmente los elementos */
-    align-items: center; /* Centra verticalmente los elementos */ 
-    padding: 1px;
-  }
-  .avatar {
-    width: 200px;
-    padding: 20px;
-  }
-}
-@media screen and (max-width: 768px) {
-  .container-login {
-    width: 85%;
-    grid-template-columns: 2fr;
-  }
-  .avatar {
-    width: 150px;
-    padding: 20px;
-  }
-  .btn {
-    display: block;
-    width: 50%;
-    height: 50%;
-  }
-  .input-field {
-    width: 95%;
-    height: 100%;
-  }
-}
-.vertical-center {
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
-.center {
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-}
-.centered {
-  text-align: center; /* Centra el contenido del formulario */
-}
-.input-field {
-  position: relative;
-}
-
-
-.container-login .input-div {
-  position: relative;
-  display: grid;
-  grid-template-columns: 7% 93%;
-  margin: 25px 0;
-  padding: 5px 0;
-
-}
-
-
-.container-login .input-div::after {
-  right: 50%; 
-}
-.container-login .input-div::before {
-  left: 50%;
-}
-.container-login .input-div.focus .i i {
-  color: #1D7AE4;
-}
-.container-login .input-div.focus {
-  top: -5px;
-  font-size: 15px;
-}
-.container-login .input-div.focus::after,
-.container-login .input-div.focus::before {
-  width: 50%;
-}
-.container-login .input-div.one {
-  margin-top: 0;
-}
-.container-login .input-div.two {
-  margin-top: 4px;
-}
-.container-login .i {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #20272c, #9b59b6);
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.container-login .i i {
-  color: #474747;
-  transition: 0.3s;
-}
-.container-login .input-div  {
-  position: relative;
-  height: 35px;
-}
-.container-login .input-div .hideShowPassWord {
-  position: absolute;
-  color: #474747;
-  right: 0;
-  display: flex;
-  height: 55px;
-}
-.container-login .input-div .hideShowPassWord i {
-  align-self: center;
-  font-size: 1.5rem;
-}
-.container-login .input-div .hideShowPassWord i:hover {
-  cursor: pointer;
-  background-color: transparent;
-  /* Create the gradient. */
-  background-image: linear-gradient(45deg, #333, #1D7AE4);
-  /* Set the background size and repeat properties. */
-  background-size: 100%;
-  background-repeat: repeat;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -moz-background-clip: text;
-  -moz-text-fill-color: transparent;
-}
-.container-login .input {
-  position: absolute;
+
+/* Contenedor del Login */
+.login-wrapper {
   width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  border: none;
-  outline: none;
-  background: none;
-  font-size: 1.2rem;
-  font-family: 'Poppins', sans-serif;
-  color: #555;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+.login-container {
+  background: #fff;
+  padding: 40px;
+  width: 350px;
+  border-radius: 10px;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Estilo del logo */
+.login-container .avatar {
+  width: 100px;
+  margin-bottom: 20px;
+}
+
+/* Título del formulario */
+.login-container h2 {
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+/* Estilo de los input groups */
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-group i.material-icons {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #999;
+}
+
+/* Estilo de los inputs */
+.input-group input {
+  width: 100%;
+  padding: 10px 10px 10px 40px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s;
+  font-size: 16px;
+}
+
+.input-group input:focus {
+  border-color: #9b59b6;
+}
+
+/* Icono para mostrar/ocultar contraseña */
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #999;
+}
+
+/* Estilo del botón de envío */
+.btn {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #9b59b6, #71b7e6);
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
+
+/* Media queries para dispositivos más pequeños */
+@media screen and (max-width: 480px) {
+  .login-container {
+    width: 90%;
+    padding: 30px 20px;
+  }
+}

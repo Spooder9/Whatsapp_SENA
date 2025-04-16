@@ -1,41 +1,35 @@
 
-<div class="background">
-    <div class="container-login center">        
-        
-        <div class="mitad login">
-            <div class="centered">
-                <form action="/login" method="POST">
-                    <img class="avatar" src="/images/logo/dashboard.webp" alt="Avatar" />
-
-                    <h5><strong>Sistema de Atención Automatizada por WhatsApp para la Empresa ABC</strong></h5>
-
-                    <div class="input-div one">
-                        <i class="material-icons prefix pt-2">person_outline</i>
-                        <label for="username" class="center-align">Username</label>
-                        <div>
-                        <input class='input' id="username" type="text" name="username" autocomplete="off" autofocus>
-                        </div>
-                        
-                    </div>
-
-                    <div class="input-div two">
-                        <i class="material-icons prefix pt-2">lock_outline</i>
-                        <label for="password" class="center-align">Password</label>
-                        <div>
-                        <input class='input' id="password" type="password" name="password" autocomplete="off" autofocus>
-                        </div>
-                        
-                        <div id='hideShowPassWord' class='hideShowPassWord'>
-                            <i class='bx bx-show-alt'></i>
-                        </div>
-                    </div>
-                    <a href="#"></a>
-                    <center><input type="submit" class="btn" value="Login" /></center>
-                </form>
-            </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login Moderno</title>
+  <!-- Google Fonts para la tipografía -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="login-wrapper">
+    <div class="login-container">
+      <form action="/login" method="POST">
+        <img src="/images/logo/dashboard.webp" alt="Logo" class="avatar">
+        <h2>Bienvenido</h2>
+        <div class="input-group">
+          <i class="material-icons">person_outline</i>
+          <input type="text" name="username" placeholder="Username" autocomplete="off" autofocus>
         </div>
+        <div class="input-group">
+          <i class="material-icons">lock_outline</i>
+          <input type="password" name="password" placeholder="Password" autocomplete="off">
+          <i class="toggle-password material-icons">visibility</i>
+        </div>
+        <input type="submit" value="Login" class="btn">
+      </form>
     </div>
-</div>
-
-
-<script src="/js/login.js"></script>
+  </div>
+  <script src="/js/login.js"></script>
+</body>
+</html>
