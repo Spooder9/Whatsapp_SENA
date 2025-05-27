@@ -44,7 +44,7 @@ const clientWP = new Client({
 	webVersionCache: {
 		path: apis.botWhatsappWebJS.PATH_CACHE
 	},
-	authTimeoutMs: 3600000,
+	authTimeoutMs: 60000,
 	clientId: apis.botWhatsappWebJS.PORT
 });
 
@@ -416,7 +416,7 @@ async function manageTree(msgIn) {
 
 
 // ! ======================================================================================================================================================================
-// !                                                              RECEPCION DE MENSAJES ENTRANTES → FUNCION arbol
+// !                                                              RECEPCIÓN DE MENSAJES ENTRANTES → FUNCIÓN arbol
 // ! ======================================================================================================================================================================
 /**
  * @author Brayan Yanez
@@ -426,265 +426,228 @@ async function manageTree(msgIn) {
  * 
  */
 async function arbol(WHATSAPP_FROM, WHATSAPP_BODY, ID_TBL_CHATS_MANAGEMENT) {
-	try {
-	  // * VARIABLES DE CONTROL
-	  let mensaje = '';
-	  let nuevoEstado = '';
-	  const FIN_ARBOL = 'MSG_FIN';
-	  // MENSAJE_CONTACTO se utilizará como respuesta final en todas las ramas
-	  const MENSAJE_CONTACTO = "Gracias por contactar ABC Seguros. Para gestionar su caso, por favor llame al 123456789 o envíe un correo a info@abcseguros.com.";
-  
-	  // * OBTENER EL FLUJO DEL ÁRBOL PARA EL CHAT RECIBIDO
-	  const sqlSelect = `
-		SELECT GES_CULT_MSGBOT AS ESTADO_ARBOL, GES_ESTADO_CASO 
-		FROM ${DB_NAME}.tbl_chats_management 
-		WHERE PKGES_CODIGO = ? AND GES_NUMERO_COMUNICA = ? AND GES_CESTADO = ? 
-		ORDER BY PKGES_CODIGO DESC LIMIT 1`;
-	  const [resSelect] = await connMySQL.promise().query(sqlSelect, [ID_TBL_CHATS_MANAGEMENT, WHATSAPP_FROM, 'Activo']);
-	  
-	  // * SI EXISTE UN REGISTRO PARA EL CHAT
-	  if (resSelect.length) {
-		let ESTADO_ACTUAL_ARBOL = resSelect[0].ESTADO_ARBOL;
-		
-		switch (ESTADO_ACTUAL_ARBOL) {
-		  // Estado inicial: el usuario habla por primera vez
-		  case 'USUARIO_HABLA_1RA_VEZ':
-			mensaje = 
-			  "Bienvenido a ABC Seguros.\n" +
-			  "Por favor, elija una opción:\n" +
-			  "1. Consulta de Cotizaciones\n" +
-			  "2. Gestión de Reclamos y Siniestros\n" +
-			  "3. Consulta de Pólizas y Servicios\n" +
-			  "4. Asesoría y Consultas Generales";
-			nuevoEstado = 'BIENVENIDA';
-			break;
-			
-		  // Estado de bienvenida: se espera la selección principal
-		  case 'BIENVENIDA': {
-			switch (WHATSAPP_BODY.trim()) {
-			  case '1':
-				mensaje = 
-				  "Has seleccionado *Consulta de Cotizaciones*.\n" +
-				  "Seleccione una opción:\n" +
-				  "1. Cotización de Seguros (Auto)\n" +
-				  "2. Tipos de Seguro (Vida, Hogar, Otros Seguros)";
-				nuevoEstado = 'COTIZACIONES_MENU';
-				break;
-			  case '2':
-				mensaje = 
-				  "Has seleccionado *Gestión de Reclamos y Siniestros*.\n" +
-				  "Elige una opción:\n" +
-				  "1. Notificación de Siniestros\n" +
-				  "2. Seguimiento de Reclamos\n" +
-				  "3. Emergencias 24H";
-				nuevoEstado = 'RECLAMOS';
-				break;
-			  case '3':
-				mensaje = 
-				  "Has seleccionado *Consulta de Pólizas y Servicios*.\n" +
-				  "Elige:\n" +
-				  "1. Consulta de Datos de Póliza\n" +
-				  "2. Actualización de Datos y Coberturas";
-				nuevoEstado = 'POLIZAS';
-				break;
-			  case '4':
-				mensaje = 
-				  "Has seleccionado *Asesoría y Consultas Generales*.\n" +
-				  "Elige:\n" +
-				  "1. Dudas sobre productos\n" +
-				  "2. Recomendaciones y Asesoramiento Técnico";
-				nuevoEstado = 'ASESORIA';
-				break;
-			  default:
-				mensaje = 
-				  "Opción no válida.\n" +
-				  "Por favor, elija una opción:\n" +
-				  "1. Consulta de Cotizaciones\n" +
-				  "2. Gestión de Reclamos y Siniestros\n" +
-				  "3. Consulta de Pólizas y Servicios\n" +
-				  "4. Asesoría y Consultas Generales";
-				nuevoEstado = 'BIENVENIDA';
-				break;
-			}
-			break;
-		  }
-		  
-		  // Ramas de Cotizaciones
-		  case 'COTIZACIONES_MENU': {
-			switch (WHATSAPP_BODY.trim()) {
-			  case '1':
-				// En lugar de procesar y derivar, se cierra directamente el flujo
-				mensaje = MENSAJE_CONTACTO;
-				nuevoEstado = FIN_ARBOL;
-				break;
-			  case '2':
-				switch (WHATSAPP_BODY.trim()) { // Se utiliza el mismo input para elegir tipo de seguro
-				  // No es necesario un switch anidado si el usuario ya eligió 2,
-				  // pero suponemos que en la siguiente interacción se elige entre opciones:
-				  default:
-					// En el siguiente mensaje se muestra el submenú de tipos de seguros
-					mensaje = 
-					  "Seleccione el tipo de seguro:\n" +
-					  "1. Vida\n" +
-					  "2. Hogar\n" +
-					  "3. Otros Seguros";
-					nuevoEstado = 'TIPOS_SEGURO';
-					break;
-				}
-				break;
-			  default:
-				mensaje = 
-				  "Opción no válida en Consulta de Cotizaciones.\n" +
-				  "Seleccione:\n" +
-				  "1. Cotización de Seguros (Auto)\n" +
-				  "2. Tipos de Seguro (Vida, Hogar, Otros Seguros)";
-				nuevoEstado = 'COTIZACIONES_MENU';
-				break;
-			}
-			break;
-		  }
-		  
-		  // Selección de Tipos de Seguro para Cotizaciones (Vida, Hogar, Otros)
-		  case 'TIPOS_SEGURO': {
-			switch (WHATSAPP_BODY.trim()) {
-			  case '1':
-				mensaje = MENSAJE_CONTACTO;
-				nuevoEstado = FIN_ARBOL;
-				break;
-			  case '2':
-				mensaje = MENSAJE_CONTACTO;
-				nuevoEstado = FIN_ARBOL;
-				break;
-			  case '3':
-				mensaje = MENSAJE_CONTACTO;
-				nuevoEstado = FIN_ARBOL;
-				break;
-			  default:
-				mensaje = 
-				  "Opción no válida en Tipos de Seguro.\n" +
-				  "Seleccione:\n1. Vida\n2. Hogar\n3. Otros Seguros";
-				nuevoEstado = 'TIPOS_SEGURO';
-				break;
-			}
-			break;
-		  }
-		  
-		  // Ramas de recolección de datos para Cotizaciones (Auto, Vida, Hogar, Otros)
-		  case 'COTIZACION_AUTO':
-		  case 'COTIZACION_VIDA':
-		  case 'COTIZACION_HOGAR':
-		  case 'COTIZACION_OTROS': {
-			// Se supone que aquí se procesan los datos ingresados; se finaliza el flujo devolviendo el mensaje de contacto
-			mensaje = MENSAJE_CONTACTO;
-			nuevoEstado = FIN_ARBOL;
-			break;
-		  }
-		  
-		  // Ramas de Gestión de Reclamos y Siniestros
-		  case 'RECLAMOS': {
-			switch (WHATSAPP_BODY.trim()) {
-			  case '1':
-				// Notificación de Siniestros: se supone que el usuario ingresa datos y se cierra el flujo
-				mensaje = MENSAJE_CONTACTO;
-				nuevoEstado = FIN_ARBOL;
-				break;
-			  case '2':
-				// Seguimiento de Reclamos: se ingresa el número de reclamo y se cierra el flujo
-				mensaje = MENSAJE_CONTACTO;
-				nuevoEstado = FIN_ARBOL;
-				break;
-			  case '3':
-				// Emergencias 24H: se cierra el flujo inmediatamente
-				mensaje = MENSAJE_CONTACTO;
-				nuevoEstado = FIN_ARBOL;
-				break;
-			  default:
-				mensaje = "Opción no válida en Gestión de Reclamos y Siniestros.\nElija 1, 2 o 3.";
-				nuevoEstado = 'RECLAMOS';
-				break;
-			}
-			break;
-		  }
-		  
-		  // Ramas de Consulta de Pólizas y Servicios
-		  case 'POLIZAS': {
-			switch (WHATSAPP_BODY.trim()) {
-			  case '1':
-				mensaje = MENSAJE_CONTACTO;
-				nuevoEstado = FIN_ARBOL;
-				break;
-			  case '2':
-				mensaje = MENSAJE_CONTACTO;
-				nuevoEstado = FIN_ARBOL;
-				break;
-			  default:
-				mensaje = "Opción no válida en Consulta de Pólizas y Servicios.\nElija 1 o 2.";
-				nuevoEstado = 'POLIZAS';
-				break;
-			}
-			break;
-		  }
-		  
-		  // Ramas de Asesoría y Consultas Generales
-		  case 'ASESORIA': {
-			switch (WHATSAPP_BODY.trim()) {
-			  case '1':
-				mensaje = MENSAJE_CONTACTO;
-				nuevoEstado = FIN_ARBOL;
-				break;
-			  case '2':
-				mensaje = MENSAJE_CONTACTO;
-				nuevoEstado = FIN_ARBOL;
-				break;
-			  default:
-				mensaje = "Opción no válida en Asesoría y Consultas Generales.\nElija 1 o 2.";
-				nuevoEstado = 'ASESORIA';
-				break;
-			}
-			break;
-		  }
-		  
-		  // Estados finales en los que se esperaba información, se finaliza siempre con el mensaje de contacto.
-		  case 'ASESORIA_DUDAS':
-		  case 'ASESORIA_RECOMIENDA':
-		  case 'POLIZA_CONSULTA':
-		  case 'POLIZA_ACTUALIZA': {
-			mensaje = MENSAJE_CONTACTO;
-			nuevoEstado = FIN_ARBOL;
-			break;
-		  }
-		  
-		  // Estado por defecto
-		  default:
-			mensaje = MENSAJE_CONTACTO;
-			nuevoEstado = FIN_ARBOL;
-			break;
-		}
-		
-		// * ENVÍO DEL MENSAJE AL USUARIO
-		await sendMessage({ whatsappNum: WHATSAPP_FROM, textBody: mensaje, ID_TBL_CHATS_MANAGEMENT });
-		
-		// * ACTUALIZAR EL ESTADO DEL CHAT EN LA BASE DE DATOS
-		// Si el flujo finaliza, se actualizan ambas columnas: GES_CULT_MSGBOT y GES_ESTADO_CASO
-		if (nuevoEstado === FIN_ARBOL) {
-		  const sqlUpdate = `
-			UPDATE ${DB_NAME}.tbl_chats_management 
-			SET GES_CULT_MSGBOT = ?, GES_ESTADO_CASO = 'CLOSE'
-			WHERE PKGES_CODIGO = ?`;
-		  await connMySQL.promise().query(sqlUpdate, [nuevoEstado, ID_TBL_CHATS_MANAGEMENT]);
-		} else {
-		  const sqlUpdate = `
-			UPDATE ${DB_NAME}.tbl_chats_management 
-			SET GES_CULT_MSGBOT = ? 
-			WHERE PKGES_CODIGO = ?`;
-		  await connMySQL.promise().query(sqlUpdate, [nuevoEstado, ID_TBL_CHATS_MANAGEMENT]);
-		}
-	  }
-	} catch (error) {
-	  console.error('❌ Error en la función arbol ->', error);
-	}
+  try {
+    let mensaje = '';
+    let nuevoEstado = '';
+    const FIN_ARBOL = 'MSG_FIN';
+    const MENSAJE_CONTACTO = "📞 ¡Gracias por contactar a *ABC Seguros*! Para gestionar tu caso, por favor comunícate al ☎️ 123456789 o escribe a ✉️ info@abcseguros.com. ¡Estaremos encantados de ayudarte! 😊";
+
+    const sqlSelect = `
+      SELECT GES_CULT_MSGBOT AS ESTADO_ARBOL, GES_ESTADO_CASO 
+      FROM ${DB_NAME}.tbl_chats_management 
+      WHERE PKGES_CODIGO = ? AND GES_NUMERO_COMUNICA = ? AND GES_CESTADO = ? 
+      ORDER BY PKGES_CODIGO DESC LIMIT 1`;
+    const [resSelect] = await connMySQL.promise().query(sqlSelect, [ID_TBL_CHATS_MANAGEMENT, WHATSAPP_FROM, 'Activo']);
+
+    if (resSelect.length) {
+      let ESTADO_ACTUAL_ARBOL = resSelect[0].ESTADO_ARBOL;
+
+      switch (ESTADO_ACTUAL_ARBOL) {
+        case 'USUARIO_HABLA_1RA_VEZ':
+          mensaje =
+            "👋 ¡Hola! Bienvenido a *ABC Seguros*.\n\n" +
+            "¿Cómo podemos ayudarte hoy? 😊 Elige una opción del siguiente menú:\n\n" +
+            "1️⃣ *Consulta de Cotizaciones*\n" +
+            "2️⃣ *Gestión de Reclamos y Siniestros*\n" +
+            "3️⃣ *Consulta de Pólizas y Servicios*\n" +
+            "4️⃣ *Asesoría y Consultas Generales*\n\n" +
+            "✍️ Responde con el número de la opción que deseas.";
+          nuevoEstado = 'BIENVENIDA';
+          break;
+
+        case 'BIENVENIDA': {
+          switch (WHATSAPP_BODY.trim()) {
+            case '1':
+              mensaje =
+                "📋 Has elegido *Consulta de Cotizaciones*.\n\n" +
+                "Selecciona una opción:\n" +
+                "1️⃣ Cotización de Seguros (Auto) 🚗\n" +
+                "2️⃣ Tipos de Seguro (Vida, Hogar, Otros) 🏡";
+              nuevoEstado = 'COTIZACIONES_MENU';
+              break;
+            case '2':
+              mensaje =
+                "🛠️ Has seleccionado *Gestión de Reclamos y Siniestros*.\n\n" +
+                "¿Qué necesitas?\n" +
+                "1️⃣ Notificación de Siniestros ⚠️\n" +
+                "2️⃣ Seguimiento de Reclamos 📄\n" +
+                "3️⃣ Emergencias 24H 🚨";
+              nuevoEstado = 'RECLAMOS';
+              break;
+            case '3':
+              mensaje =
+                "📑 Has elegido *Consulta de Pólizas y Servicios*.\n\n" +
+                "Elige una opción:\n" +
+                "1️⃣ Consulta de Datos de Póliza 🔍\n" +
+                "2️⃣ Actualización de Datos y Coberturas 📝";
+              nuevoEstado = 'POLIZAS';
+              break;
+            case '4':
+              mensaje =
+                "🧠 Has elegido *Asesoría y Consultas Generales*.\n\n" +
+                "Selecciona una opción:\n" +
+                "1️⃣ Dudas sobre productos ❓\n" +
+                "2️⃣ Recomendaciones y Asesoramiento Técnico 💡";
+              nuevoEstado = 'ASESORIA';
+              break;
+            default:
+              mensaje =
+                "⚠️ Opción no válida. Por favor, elige una de las siguientes opciones:\n" +
+                "1️⃣ Consulta de Cotizaciones\n" +
+                "2️⃣ Gestión de Reclamos y Siniestros\n" +
+                "3️⃣ Consulta de Pólizas y Servicios\n" +
+                "4️⃣ Asesoría y Consultas Generales";
+              nuevoEstado = 'BIENVENIDA';
+              break;
+          }
+          break;
+        }
+
+        case 'COTIZACIONES_MENU': {
+          switch (WHATSAPP_BODY.trim()) {
+            case '1':
+              mensaje = MENSAJE_CONTACTO;
+              nuevoEstado = FIN_ARBOL;
+              break;
+            case '2':
+              mensaje =
+                "🔍 ¿Qué tipo de seguro deseas cotizar?\n" +
+                "1️⃣ Vida ❤️\n" +
+                "2️⃣ Hogar 🏠\n" +
+                "3️⃣ Otros Seguros 📦";
+              nuevoEstado = 'TIPOS_SEGURO';
+              break;
+            default:
+              mensaje =
+                "⚠️ Opción no válida. Por favor selecciona:\n" +
+                "1️⃣ Cotización de Seguros (Auto)\n" +
+                "2️⃣ Tipos de Seguro (Vida, Hogar, Otros)";
+              nuevoEstado = 'COTIZACIONES_MENU';
+              break;
+          }
+          break;
+        }
+
+        case 'TIPOS_SEGURO': {
+          switch (WHATSAPP_BODY.trim()) {
+            case '1':
+            case '2':
+            case '3':
+              mensaje = MENSAJE_CONTACTO;
+              nuevoEstado = FIN_ARBOL;
+              break;
+            default:
+              mensaje =
+                "⚠️ Opción no válida. Por favor selecciona el tipo de seguro:\n" +
+                "1️⃣ Vida\n" +
+                "2️⃣ Hogar\n" +
+                "3️⃣ Otros Seguros";
+              nuevoEstado = 'TIPOS_SEGURO';
+              break;
+          }
+          break;
+        }
+
+        case 'COTIZACION_AUTO':
+        case 'COTIZACION_VIDA':
+        case 'COTIZACION_HOGAR':
+        case 'COTIZACION_OTROS': {
+          mensaje = MENSAJE_CONTACTO;
+          nuevoEstado = FIN_ARBOL;
+          break;
+        }
+
+        case 'RECLAMOS': {
+          switch (WHATSAPP_BODY.trim()) {
+            case '1':
+            case '2':
+            case '3':
+              mensaje = MENSAJE_CONTACTO;
+              nuevoEstado = FIN_ARBOL;
+              break;
+            default:
+              mensaje =
+                "⚠️ Opción no válida. Por favor selecciona una opción:\n" +
+                "1️⃣ Notificación de Siniestros\n" +
+                "2️⃣ Seguimiento de Reclamos\n" +
+                "3️⃣ Emergencias 24H";
+              nuevoEstado = 'RECLAMOS';
+              break;
+          }
+          break;
+        }
+
+        case 'POLIZAS': {
+          switch (WHATSAPP_BODY.trim()) {
+            case '1':
+            case '2':
+              mensaje = MENSAJE_CONTACTO;
+              nuevoEstado = FIN_ARBOL;
+              break;
+            default:
+              mensaje =
+                "⚠️ Opción no válida. Por favor elige:\n" +
+                "1️⃣ Consulta de Datos de Póliza\n" +
+                "2️⃣ Actualización de Datos y Coberturas";
+              nuevoEstado = 'POLIZAS';
+              break;
+          }
+          break;
+        }
+
+        case 'ASESORIA': {
+          switch (WHATSAPP_BODY.trim()) {
+            case '1':
+            case '2':
+              mensaje = MENSAJE_CONTACTO;
+              nuevoEstado = FIN_ARBOL;
+              break;
+            default:
+              mensaje =
+                "⚠️ Opción no válida. Por favor elige:\n" +
+                "1️⃣ Dudas sobre productos\n" +
+                "2️⃣ Recomendaciones y Asesoramiento Técnico";
+              nuevoEstado = 'ASESORIA';
+              break;
+          }
+          break;
+        }
+
+        case 'ASESORIA_DUDAS':
+        case 'ASESORIA_RECOMIENDA':
+        case 'POLIZA_CONSULTA':
+        case 'POLIZA_ACTUALIZA': {
+          mensaje = MENSAJE_CONTACTO;
+          nuevoEstado = FIN_ARBOL;
+          break;
+        }
+
+        default:
+          mensaje = MENSAJE_CONTACTO;
+          nuevoEstado = FIN_ARBOL;
+          break;
+      }
+
+      await sendMessage({ whatsappNum: WHATSAPP_FROM, textBody: mensaje, ID_TBL_CHATS_MANAGEMENT });
+      console.log("Mensaje saliente =  573194326367@c.us Body =  ", mensaje, " to = ", WHATSAPP_FROM);
+
+      const sqlUpdate = nuevoEstado === FIN_ARBOL
+        ? `
+          UPDATE ${DB_NAME}.tbl_chats_management 
+          SET GES_CULT_MSGBOT = ?, GES_ESTADO_CASO = 'CLOSE'
+          WHERE PKGES_CODIGO = ?`
+        : `
+          UPDATE ${DB_NAME}.tbl_chats_management 
+          SET GES_CULT_MSGBOT = ? 
+          WHERE PKGES_CODIGO = ?`;
+
+      await connMySQL.promise().query(sqlUpdate, [nuevoEstado, ID_TBL_CHATS_MANAGEMENT]);
+    }
+  } catch (error) {
+    console.error('❌ Error en la función arbol ->', error);
   }
-  
+}
+
   
   
 
@@ -863,6 +826,14 @@ updateInfoBotWP({
 	LIPR_QR_STRING: null
 });
 
+
+/**
+ * @author Brayan Yanez
+ * @created 14 de Mayo de 2024
+ * @lastModified 27 de Mayo 2025
+ * @version 1.0.0
+ */
+// TODO: Se eliminan carpetas al tener una sesión no exitosa en wp web
 // inicializa cliente WP
 clientWP.initialize().then(async () => {
 	const horaFinInicioApp = format(new Date(), 'yyyy-MM-dd KK:mm:ss');
@@ -873,6 +844,26 @@ clientWP.initialize().then(async () => {
 	console.log('❌ Error fn clientWP.initialize', error);
 	updateInfoBotWP({
 		LIPR_STATUS_APP: DICC.STATUS_APP_ERROR
+	});
+	// Rutas de las carpetas a eliminar
+	const foldersToDelete = [
+		path.join(__dirname,'.wwebjs_auth'),
+		path.join(__dirname,'.wwebjs_cache')
+	];
+
+	// Eliminar carpetas recursivamente
+	foldersToDelete.forEach(folderPath => {
+		if (fs.existsSync(folderPath)) {
+			fs.rm(folderPath, { recursive: true, force: true }, (err) => {
+				if (err) {
+					console.error(`Error al eliminar ${folderPath}:`, err);
+				} else {
+					console.log(`✅ Carpeta eliminada: ${folderPath}`);
+				}
+			});
+		} else {
+			console.log(`ℹ️ Carpeta no encontrada (no se eliminó): ${folderPath}`);
+		}
 	});
 });
 
@@ -907,11 +898,41 @@ clientWP.on('authenticated', () => {
 	updateInfoBotWP({ LIPR_SESIONWP_STATUS: DICC.SESION_OK, LIPR_QR_STATUS: DICC.QR_EMPAREJADO, LIPR_QR_STRING: null });
 });
 
+
+/**
+ * @author Brayan Yanez
+ * @created 14 de Mayo de 2024
+ * @lastModified 27 de Mayo 2025
+ * @version 1.0.0
+ */
+// TODO: Se eliminan carpetas al tener una sesión no exitosa en wp web
 // * sesión no exitosa en wp web
 clientWP.on('auth_failure', (msg) => {
 	// ? Fired if session restore was unsuccessfull
 	console.error(`❌ ${getDateTimeActual()} AUTHENTICATION FAILURE (sesión no exitosa)`, msg);
 	updateInfoBotWP({ LIPR_SESIONWP_STATUS: DICC.SESION_FAIL, LIPR_CLIENTWP_STATUS: DICC.CLIENT_FAIL });
+
+	// Rutas de las carpetas a eliminar
+	const foldersToDelete = [
+		path.join(__dirname, '.wwebjs_auth'),
+		path.join(__dirname, '.wwebjs_cache')
+	];
+
+	// Eliminar carpetas recursivamente
+	foldersToDelete.forEach(folderPath => {
+		if (fs.existsSync(folderPath)) {
+			fs.rm(folderPath, { recursive: true, force: true }, (err) => {
+				if (err) {
+					console.error(`Error al eliminar ${folderPath}:`, err);
+				} else {
+					console.log(`✅ Carpeta eliminada: ${folderPath}`);
+				}
+			});
+		} else {
+			console.log(`ℹ️ Carpeta no encontrada (no se eliminó): ${folderPath}`);
+		}
+	});
+
 });
 
 
