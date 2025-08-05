@@ -52,7 +52,7 @@ router.get("/listarUsuarios", isSupervisorOrAdministrator, async (req, res) => {
     let [datasqlListaUsuarios] = await connMySQL.promise().query(sqlListaUsuarios);
 
     for (let i = 0; i < datasqlListaUsuarios.length; i++) {
-      datasqlListaUsuarios[i].EnCrypt = Class2.EnCrypt(`${datasqlListaUsuarios[i].PKUSU_NCODIGO}`);
+      datasqlListaUsuarios[i].EnCrypt = Class2.Encrypt(`${datasqlListaUsuarios[i].PKUSU_NCODIGO}`);
     }
 
     res.render("app/listarUsuarios", { title: "listado usuarios", listaUsuarios: datasqlListaUsuarios });

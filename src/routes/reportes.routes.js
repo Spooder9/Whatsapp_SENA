@@ -4,6 +4,7 @@ const config = JSON.parse(fs.readFileSync(path.join(__dirname, '../../global.con
 const { DB_NAME } = config.database;
 const router = require("express").Router();
 const connMySQL = require("../../public/database");
+const { Encrypt, DeCrypt } = require("../../public/Class2");
 const { isSupervisorOrAdministrator } = require("../lib/auth");
 
 router.get("/reporteInteracciones", isSupervisorOrAdministrator, async (req, res) => {

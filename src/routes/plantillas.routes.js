@@ -17,7 +17,7 @@ router.get("/listarPlantillas", isSupervisorOrAdministrator, async (req, res) =>
     let [datasqlListaPlantillas] = await connMySQL.promise().query(sqlListaPlantillas);
 
     for (let i = 0; i < datasqlListaPlantillas.length; i++) {
-      datasqlListaPlantillas[i].EnCrypt = Class2.EnCrypt(`${datasqlListaPlantillas[i].PKPLA_NCODIGO}`);
+      datasqlListaPlantillas[i].EnCrypt = Class2.Encrypt(`${datasqlListaPlantillas[i].PKPLA_NCODIGO}`);
     }
 
     res.render("app/listarPlantillas", { title: "listado plantillas", listaPlantillas: datasqlListaPlantillas });
