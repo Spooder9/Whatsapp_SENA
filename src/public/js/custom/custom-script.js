@@ -92,6 +92,7 @@ const inputsMayus = (arrInputs = []) => {
     });
   });
 };
+
 // * limpiarCampos -> Limpia inputs Materialize - Misma idea de la function inputsMayus()
 const limpiarCampos = (arrInputs = []) => {
   arrInputs.forEach((element) => {
@@ -99,6 +100,7 @@ const limpiarCampos = (arrInputs = []) => {
     element.nextElementSibling.classList.remove("active");
   });
 };
+
 // * mensajeSuccess -> Muestra una alerta tomando el nombre de '<div id="messageSuccess" data-message="{{success}}"></div>'
 // * --- ver en views/partials/messages.hbs
 const mensajeSweetalert2 = () => {
@@ -121,18 +123,6 @@ const mensajeSweetalert2 = () => {
     alertaSwal.fire({ icon: "error", title: message });
   }
 };
-
-// * Funciones Cargar y Ocultar loader
-// const containerLoader = document.getElementById("containerLoader"),
-//   textLoader = document.getElementById("textLoader"),
-//   cargarLoader = (message = "Cargando...") => {
-//     containerLoader.classList.remove("hidden");
-//     textLoader.textContent = message;
-//   },
-//   ocultarLoader = () => {
-//     containerLoader.classList.add("hidden");
-//     textLoader.textContent = "";
-//   };
 
 // * Funciones Cargar y Ocultar loader
 const containerLoader = document.getElementById('loaderGeneral');

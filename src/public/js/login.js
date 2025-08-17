@@ -1,66 +1,21 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const password = document.getElementById("password");
+  const togglePassword = document.getElementById("togglePassword");
 
-  const inputs = document.querySelectorAll(".input");
-  inputs.forEach((input) => {
-    input.addEventListener("focus", () => {
-      let parent = input.parentNode.parentNode;
-      parent.classList.add("focus");
-    });
-    input.addEventListener("blur", () => {
-      let parent = input.parentNode.parentNode;
-      if (input.value === "") {
-        parent.classList.remove("focus");
-      }
-    });
-  });
+  togglePassword.addEventListener("click", () => {
+    const isPassword = password.type === "password";
+    
+    // Cambiar tipo del input
+    password.type = isPassword ? "text" : "password";
+    
+    // Agregar animación de rotación
+    togglePassword.style.transform = "scale(0.9) rotate(180deg)";
+    togglePassword.style.opacity = "0.5";
 
-  const username = document.getElementById("username");
-  inputsMayus([username]);
-
-  const hideShowPassWord = document.getElementById("hideShowPassWord"),
-    password = document.getElementById("password");
-  hideShowPassWord.addEventListener("click", () => {
-    if (password.type === "password") {
-      password.type = "text";
-      hideShowPassWord.innerHTML = `<i class="bx bx-hide"></i>`;
-    } else {
-      password.type = "password";
-      hideShowPassWord.innerHTML = `<i class='bx bx-show-alt'></i>`;
-    }
-  });
-
-  const usernameInput = document.getElementById("username");
-  const usernameIcon = document.querySelector(".input-div.one i");
-  const usernameLabel = document.querySelector(".input-div.one label");
-
-  usernameInput.addEventListener("focus", function() {
-      usernameIcon.style.display = "none";
-      usernameLabel.style.display = "none";
-  });
-
-  usernameInput.addEventListener("blur", function() {
-      if (usernameInput.value === "") {
-          usernameIcon.style.display = "block";
-          usernameLabel.style.display = "block";
-      }
-  });
-
-  // Para el campo de contraseña
-  const passwordInput = document.getElementById("password");
-  const passwordIcon = document.querySelector(".input-div.two i");
-  const passwordLabel = document.querySelector(".input-div.two label");
-
-  passwordInput.addEventListener("focus", function() {
-      passwordIcon.style.display = "none";
-      passwordLabel.style.display = "none";
-  });
-
-  passwordInput.addEventListener("blur", function() {
-      if (passwordInput.value === "") {
-          passwordIcon.style.display = "block";
-          passwordLabel.style.display = "block";
-      }
+    setTimeout(() => {
+      togglePassword.textContent = isPassword ? "visibility_off" : "visibility";
+      togglePassword.style.transform = "scale(1) rotate(0deg)";
+      togglePassword.style.opacity = "1";
+    }, 150);
   });
 });
-
-

@@ -1,35 +1,43 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login Moderno</title>
-  <!-- Google Fonts para la tipografía -->
+
+  <!-- Google Fonts y Material Icons -->
   <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
-  <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
   <div class="login-wrapper">
     <div class="login-container">
-      <form action="/login" method="POST">
-        <img src="/images/logo/dashboard.webp" alt="Logo" class="avatar">
+      <form id="login-form" action="#" method="POST">
+        <img src="/images/logo/dashboard.webp" alt="Logo" class="avatar" />
         <h2>Bienvenido</h2>
+
+        <!-- Usuario -->
         <div class="input-group">
           <i class="material-icons">person_outline</i>
-          <input type="text" name="username" placeholder="Username" autocomplete="off" autofocus>
+          <input type="text" id="username" name="username" placeholder="Username" autocomplete="off" />
         </div>
-        <div class="input-group">
-          <i class="material-icons">lock_outline</i>
-          <input type="password" name="password" placeholder="Password" autocomplete="off">
-          <i class="toggle-password material-icons">visibility</i>
+
+        <!-- Contraseña + icono de mostrar -->
+        <div class="input-group-outer">
+          <div class="input-group">
+            <i class="material-icons">lock_outline</i>
+            <input type="password" id="password" name="password" placeholder="Password" autocomplete="off" />
+          </div>
+          <i class="material-icons toggle-password" id="togglePassword">visibility</i>
         </div>
-        <input type="submit" value="Login" class="btn">
+
+        <input type="submit" value="Login" class="btn" />
       </form>
     </div>
   </div>
+
   <script src="/js/login.js"></script>
 </body>
 </html>

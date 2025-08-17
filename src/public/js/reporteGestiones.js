@@ -18,37 +18,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = {
       fechaInicial: fechaInicial.value,
       fechaFinal: fechaFinal.value,
-      noDocumento: inpNoDocumento.value,
     };
 
     let response = await postData("/reportes/reporte-gestiones", data);
 
     $("#page-length-option").DataTable().destroy();
 
-    if (response.data.length > 0) {
-      var table = $("#page-length-option").DataTable({
+    if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+      $("#page-length-option").DataTable({
         data: response.data,
         columns: [
-          { data: "GES_ESTADO_SOLICITUD" },
-          { data: "GES_NOMBRE_COMUNICA" },
-          { data: "GES_TIPO_DOC_PACIENTE" },
-          { data: "GES_DOCUMENTO_PACIENTE" },
-          { data: "GES_NOMBRE_PACIENTE" },
-          { data: "GES_PARENTESCO" },
-          { data: "GES_NUMEROS_TELEFONO" },
-          { data: "GES_CORREO" },
-          { data: "GES_PACIENTE_HOSPITALIZADO" },
-          { data: "GES_SEDE" },
-          { data: "GES_SOLICITUD" },
-          { data: "GES_CONSULTA_MEDICINA_ESP" },
-          { data: "GES_CONSULTA_ES" },
-          { data: "GES_CUAL_PROGRAMA" },
-          { data: "GES_EPS_REMITE" },
-          { data: "GES_STRFECHA_EXPEDICION" },
-          { data: "GES_STR_FECHA_VENCIMIENTO" },
-          { data: "GES_STR_RANGO_FECHAS_CITA" },
-          { data: "GES_MEDICO_PREFERENCIA" },
-          { data: "GES_CONSULTA_EXTERNA" },
+          { data: "PKGES_CODIGO", title: "Código" },
+          { data: "GES_TIPO_CHAT", title: "Tipo chat" },
+          { data: "FKGES_NUSU_CODIGO", title: "Usuario" },
+          { data: "GES_ESTADO_CASO", title: "Estado caso" },
+          { data: "GES_CULT_MSGBOT", title: "Mensaje bot" },
+          { data: "GES_NUMERO_COMUNICA", title: "Número comunica" },
+          { data: "GES_ULT_INTERACCION", title: "Última interacción" },
+          { data: "GES_TIPO_CANAL", title: "Tipo canal" },
+          { data: "GES_CHORA_INICIO_GESTION", title: "Hora inicio gestión" },
+          { data: "GES_CFECHA_REGISTRO", title: "Fecha registro" },
+          { data: "GES_CFECHA_MODIFICACION", title: "Fecha modificación" },
+          { data: "GES_NOMBRE_COMUNICA", title: "Nombre comunica" },
+          { data: "GES_CTIPO", title: "Tipo" },
+          { data: "GES_ULTIMO_ENVIADO", title: "Último enviado" },
+          { data: "GES_ULTIMO_RECIBIDO", title: "Último recibido" },
+          { data: "GES_CFECHA_ASIGNACION", title: "Fecha asignación" },
+          { data: "GES_CFECHA_PASOASESOR", title: "Fecha paso a asesor" },
+          { data: "GES_CESTADO", title: "Estado" }
         ],
         responsive: true,
         iDisplayLength: 20,

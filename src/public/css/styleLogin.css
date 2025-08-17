@@ -1,11 +1,9 @@
-/* Reset básico */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Fuente general */
 body {
   font-family: 'Roboto', sans-serif;
   background: linear-gradient(135deg, #20272c, #9b59b6);
@@ -15,7 +13,6 @@ body {
   align-items: center;
 }
 
-/* Contenedor del Login */
 .login-wrapper {
   width: 100%;
   display: flex;
@@ -32,23 +29,28 @@ body {
   text-align: center;
 }
 
-/* Estilo del logo */
-.login-container .avatar {
+.avatar {
   width: 100px;
   margin-bottom: 20px;
 }
 
-/* Título del formulario */
-.login-container h2 {
+h2 {
   margin-bottom: 30px;
   color: #333;
   font-size: 24px;
   font-weight: 500;
 }
 
-/* Estilo de los input groups */
 .input-group {
   position: relative;
+  flex: 1;
+  margin-bottom: 20px;
+}
+
+.input-group-outer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
@@ -58,34 +60,31 @@ body {
   left: 10px;
   transform: translateY(-50%);
   color: #999;
+  font-size: 24px;
+  pointer-events: none;
 }
 
-/* Estilo de los inputs */
 .input-group input {
   width: 100%;
   padding: 10px 10px 10px 40px;
   border: 1px solid #ddd;
   border-radius: 4px;
   outline: none;
-  transition: border-color 0.3s;
   font-size: 16px;
+  transition: border-color 0.3s;
 }
 
 .input-group input:focus {
   border-color: #9b59b6;
 }
 
-/* Icono para mostrar/ocultar contraseña */
 .toggle-password {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
   cursor: pointer;
   color: #999;
+  font-size: 24px;
+  user-select: none;
 }
 
-/* Estilo del botón de envío */
 .btn {
   width: 100%;
   padding: 10px;
@@ -102,10 +101,9 @@ body {
   background: linear-gradient(135deg, #71b7e6, #9b59b6);
 }
 
-/* Media queries para dispositivos más pequeños */
-@media screen and (max-width: 480px) {
-  .login-container {
-    width: 90%;
-    padding: 30px 20px;
-  }
+.error-msg {
+  color: red;
+  font-size: 13px;
+  margin-top: 4px;
+  text-align: left;
 }

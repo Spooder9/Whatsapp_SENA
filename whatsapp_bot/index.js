@@ -143,7 +143,7 @@ app.post("/send-message", async (req, res) => {
 	}
   
 	try {
-	  const message = await clientWP.sendMessage(whatsappNum, textBody);
+	  const message = await clientWP.sendMessage(whatsappNum, textBody, lastrowid);
 	  res.json({ success: true, messageId: message.id._serialized });
 	} catch (error) {
 	  console.error("Error al enviar mensaje:", error);
@@ -167,15 +167,17 @@ app.listen(PORT, () => {
  * @param {String} textBody El texto del mensaje (si viene un file, esto por defecto viene con string vacio)
  * @param {String} lastrowid PKGES_CODIGO de la intereacción
  */
-const sendMessage = async ({ whatsappNum, textBody, lastrowid, interaccion = true }) => {
+const sendMessage = async ({ whatsappNum, textBody, ID_TBL_CHATS_MANAGEMENT, interaccion = true }) => {
 	
+	lastrowid = ID_TBL_CHATS_MANAGEMENT
+
 	if (whatsappNum.length <= 17) {
 		const Message = await clientWP.sendMessage(whatsappNum, textBody);
 		const botWhatsappNum = Message.to.replace('@c.us', '');
 		const userWhatsappNum = Message.from.replace('@c.us', '');
 		const idMensaje = Message._data.id.id;
 
-
+		console.log("Mensaje saliente = ", botWhatsappNum, " Body = ", textBody, " to = ", userWhatsappNum, " FK_GES_CODIGO: ", lastrowid);
 		const dataInsert = {
 			FK_GES_CODIGO: lastrowid,
 			MES_ACCOUNT_SID: Message.from,
@@ -629,7 +631,7 @@ async function arbol(WHATSAPP_FROM, WHATSAPP_BODY, ID_TBL_CHATS_MANAGEMENT) {
       }
 
       await sendMessage({ whatsappNum: WHATSAPP_FROM, textBody: mensaje, ID_TBL_CHATS_MANAGEMENT });
-      console.log("Mensaje saliente =  573194326367@c.us Body =  ", mensaje, " to = ", WHATSAPP_FROM);
+      console.log("Mensaje saliente =  573194326367@c.us Body =  ", mensaje, " to = ", WHATSAPP_FROM, " ID_TBL_CHATS_MANAGEMENT: ", ID_TBL_CHATS_MANAGEMENT);
 
       const sqlUpdate = nuevoEstado === FIN_ARBOL
         ? `

@@ -91,30 +91,19 @@ router.post('/reporte-gestiones', async (req, res) => {
 
   if (fechaFinal.length && fechaInicial.length === 0) return res.json({ msg: 'Indique fecha inicial', data: [] });
 
-  if (!fechaFinal.length && !fechaInicial.length && !noDocumento.length) return res.json({ msg: 'Indique algún parámetro', data: [] });
-
-  if (fechaFinal.length && fechaInicial.length && noDocumento.length === 0) {
+  if (fechaFinal.length && fechaInicial.length) {
     // solo se busca fechas rangos
     stringSQL = `GES_CHORA_INICIO_GESTION BETWEEN '${fechaInicial} 00:00:00' AND '${fechaFinal} 23:59:59'`;
   }
 
-  if (fechaFinal.length === 0 && fechaInicial.length === 0 && noDocumento.length) {
-    // solo busca por documento
-    stringSQL = `GES_DOCUMENTO_PACIENTE = '${noDocumento.trim()}'`;
-  }
-
-  if (fechaFinal.length && fechaInicial.length && noDocumento.length) {
-    // Se busca por todos
-    stringSQL = `GES_CHORA_INICIO_GESTION BETWEEN '${fechaInicial} 00:00:00' AND '${fechaFinal} 23:59:59' AND GES_DOCUMENTO_PACIENTE = '${noDocumento.trim()}'`;
-  }
-
   const sqlSelect = `SELECT * FROM ${DB_NAME}.tbl_chats_management WHERE ${stringSQL}`;
+  console.log("sqlSelect", sqlSelect);
   let [resSqlSelect] = await connMySQL.promise().query(sqlSelect);
 
   if (resSqlSelect.length === 0) {
     return res.json({ msg: 'No se encontraron registros', data: [] });
   }
-
+  console.log("resSqlSelect", resSqlSelect);
   if (resSqlSelect.length) {
     res.json({ msg: '', data: resSqlSelect })
   }

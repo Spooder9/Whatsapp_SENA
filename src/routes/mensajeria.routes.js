@@ -540,17 +540,11 @@ router.post('/cerrarChat', async (req, res) => {
 
     let ChatID = chatIDHeader
 
-    if (isNaN(chatIDHeader)) {
-      ChatID = Class2.DeCrypt(chatIDHeader);
-    } else {
-      ChatID = chatIDHeader;
-    }
-
     const estadoUpdate = {
       GES_ESTADO_CASO: 'CLOSE',
       GES_CULT_MSGBOT: 'MSG_FIN',
     };
-    const selectsqlClient = `UPDATE ${DB_NAME}.tbl_chats_management SET ?, GES_CHORA_FIN_GESTION = NOW() WHERE PKGES_CODIGO = ?`;
+    const selectsqlClient = `UPDATE ${DB_NAME}.tbl_chats_management SET ? WHERE PKGES_CODIGO = ?`;
     await connMySQL
       .promise()
       .query(selectsqlClient, [estadoUpdate, ChatID])
@@ -595,7 +589,7 @@ router.post('/cerrarChatAdmin', isSupervisorOrAdministrator, async (req, res) =>
     const sqlTipificaAdmin = `INSERT INTO ${DB_NAME}.tbl_typifications SET ?`;
     await connMySQL.promise().query(sqlTipificaAdmin, [tipificaAdmin]);
 
-    const selectsqlClient = `UPDATE ${DB_NAME}.tbl_chats_management SET ?, GES_CHORA_FIN_GESTION = NOW() WHERE PKGES_CODIGO = ?`;
+    const selectsqlClient = `UPDATE ${DB_NAME}.tbl_chats_management SET ? WHERE PKGES_CODIGO = ?`;
     await connMySQL
       .promise()
       .query(selectsqlClient, [estadoUpdate, ChatID])
@@ -628,7 +622,6 @@ router.post('/insertIdGestion', async (req, res) => {
       .promise()
       .query(sqlInsertClient, [client])
       .then(async ([insertClient, fields]) => {
-        // console.log('insertClient',insertClient.insertId);
         let idGestion = Class2.EnCrypt(`${insertClient.insertId}`);
         console.log('idGestion', idGestion);
         res.json(idGestion);
